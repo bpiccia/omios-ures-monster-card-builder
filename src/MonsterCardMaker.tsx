@@ -122,8 +122,8 @@ function CardBackground({ height, contentHeight }: { readonly height: number, re
   // If the container is taller than a reasonable minimum, add 1 middle image
   // If it's much taller, add more middle images proportionally
   
-  const baseScrollHeight = 400; // Much higher - top + bottom images are taller than estimated
-  const middleImageNaturalHeight = 200; // Middle images are also taller
+  const baseScrollHeight = 380; // Increased back up - better balance
+  const middleImageNaturalHeight = 180; // Keep this the same
   
   // Only add middle images if we need more space than the base scroll provides
   const extraSpaceNeeded = Math.max(0, height - baseScrollHeight);
@@ -213,13 +213,13 @@ function MonsterCard({ monster, dict }: MonsterCardProps) {
   
   // Padding calculations - text should start inside top image and end inside bottom image
   const topPadding = 60; // increased padding for top image
-  const bottomPadding = 60; // increased padding for bottom image
+  const bottomPadding = 90; // Reduced from 120 - still protective but less aggressive
   
   // Total height = measured content + padding for positioning within images
   // If measured height seems too small, use a calculated fallback
   const calculatedMinHeight = 200; // Reduced base content estimate
   const effectiveTextHeight = Math.max(textHeight, calculatedMinHeight);
-  const totalHeight = Math.max(450, effectiveTextHeight + topPadding + bottomPadding); // Reduced from 500
+  const totalHeight = Math.max(450, effectiveTextHeight + topPadding + bottomPadding + 30); // Reduced buffer from 50 to 30
   
   console.log('Final Height Calculation:', {
     rawTextHeight: textHeight,
