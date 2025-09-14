@@ -139,7 +139,7 @@ function CardBackground({ height, contentHeight }: { readonly height: number, re
   });
   
   return (
-    <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height, zIndex: 1, display: 'flex', flexDirection: 'column', border: '10px solid green' }}>
+    <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1, display: 'flex', flexDirection: 'column', border: '10px solid green' }}>
       {/* Top image - natural aspect ratio at full width */}
       <img 
         src="/top.png" 
@@ -232,7 +232,7 @@ function MonsterCard({ monster, dict }: MonsterCardProps) {
   });
 
   return (
-    <div data-card className="w-full mx-auto" style={{ borderRadius: 16, boxShadow: '0 2px 16px #0002', overflow: 'hidden', background: 'none', padding: 0, margin: 0, width: '100%', position: 'relative', height: '800px', border: '5px solid blue' }}>
+    <div data-card className="w-full mx-auto" style={{ borderRadius: 16, boxShadow: '0 2px 16px #0002', overflow: 'visible', background: 'none', padding: 0, margin: 0, width: '100%', position: 'relative', height: 'auto', minHeight: totalHeight, border: '5px solid blue' }}>
       
       {/* Background Container - seamless scroll */}
       <CardBackground height={totalHeight} contentHeight={textHeight} />
@@ -241,15 +241,18 @@ function MonsterCard({ monster, dict }: MonsterCardProps) {
       <div 
         style={{ 
           position: 'absolute', 
-          top: topPadding, // Start at topPadding instead of 0
+          top: 0, // Start at 0 instead of topPadding
           left: 0,
           zIndex: 2, 
           width: '100%', 
-          height: totalHeight - topPadding - bottomPadding, // Content area height only
+          height: '100%', // Use full height instead of calculated height
           display: 'flex', 
           justifyContent: 'center', 
           alignItems: 'flex-start',
-          border: '5px solid red'
+          border: '5px solid red',
+          paddingTop: topPadding, // Apply padding as internal padding instead
+          paddingBottom: bottomPadding, // Apply padding as internal padding instead
+          boxSizing: 'border-box' // Include padding in height calculation
         }}
       >
         <div 
