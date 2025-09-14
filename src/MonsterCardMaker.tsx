@@ -19,6 +19,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { createRoot } from 'react-dom/client';
 import { toPng } from 'html-to-image';
 import type { Monster, Ability, Spell, Language, Dictionary } from './types';
+import './fonts.css';
 
 const dictionaries = {
   "en": {
@@ -261,32 +262,32 @@ function MonsterCard({ monster, dict }: MonsterCardProps) {
         >
           
           {/* Title and basic info - starts in top image */}
-          <div style={{ fontFamily: 'QueensPark, serif', color: '#7a4a19', fontWeight: 700, fontSize: 32, textTransform: 'uppercase', textAlign: 'center', letterSpacing: '1px', marginBottom: 0 }}>{monster.name || 'Monster Name'}</div>
-          <div style={{ fontFamily: 'Sudbury, serif', fontStyle: 'italic', color: '#7a4a19', fontSize: 18, textAlign: 'center', marginTop: '-2px' }}>{monster.sizeType || 'Size / Type'}</div>
+          <div style={{ fontFamily: 'Sudbury, serif', color: '#7a4a19', fontWeight: 700, fontSize: 22.5, textAlign: 'center', letterSpacing: '1px', marginBottom: 0, fontVariant: 'small-caps' }}>{monster.name || 'Xaracol'}</div>
+          <div style={{ fontFamily: 'QueensPark, serif', fontStyle: 'italic', color: '#7a4a19', fontSize: 11.7, textAlign: 'center', marginTop: '2px' }}>{monster.sizeType || 'Large Animal'}</div>
           <hr style={{ width: '60%', border: 'none', borderTop: '2px solid #7a4a19', margin: '12px auto 0 auto', opacity: 0.7 }} />
           
           {/* Stats block */}
           <div style={{ fontFamily: 'Sudbury, serif', marginTop: '8px', marginBottom: 0, width: '100%', textAlign: 'left' }}>
-            <div style={{ color: '#b33a1a', fontWeight: 700, fontSize: 18, marginBottom: 2 }}>{dict.hp}: <span>{monster.hp || '22'}</span></div>
-            <div style={{ color: '#7a4a19', fontWeight: 700, fontSize: 18, marginBottom: 2 }}>{dict.defense}: <span>{monster.defense || '6'}</span></div>
-            <div style={{ color: '#7a4a19', fontWeight: 700, fontSize: 18, marginBottom: 2 }}>{dict.speed}: <span>{monster.speed || '5'}</span></div>
-            <div style={{ color: '#7a4a19', fontWeight: 700, fontSize: 18 }}>{dict.damage}: <span>{monster.damage || '1d3 (Slimy Punting)'}</span></div>
+            <div style={{ fontWeight: 400, fontSize: 11.7, marginBottom: 2 }}><span style={{ color: '#b33a1a' }}><strong>{dict.hp}:</strong></span> <span style={{ color: '#000000' }}><strong>{monster.hp || '22'}</strong></span></div>
+            <div style={{ fontWeight: 400, fontSize: 11.7, marginBottom: 2 }}><span style={{ color: '#b33a1a' }}><strong>{dict.defense}:</strong></span> <span style={{ color: '#000000' }}><strong>{monster.defense || '6'}</strong></span></div>
+            <div style={{ fontWeight: 400, fontSize: 11.7, marginBottom: 2 }}><span style={{ color: '#b33a1a' }}><strong>{dict.speed}:</strong></span> <span style={{ color: '#000000' }}><strong>{monster.speed || '5'}</strong></span></div>
+            <div style={{ fontWeight: 400, fontSize: 11.7 }}><span style={{ color: '#b33a1a' }}><strong>{dict.damage}:</strong></span> <span style={{ color: '#000000' }}><strong>{monster.damage || '1d5 (Slimy Punting)'}</strong></span></div>
           </div>
           
           {/* Attributes */}
           <hr style={{ width: '100%', border: 'none', borderTop: '2px solid #7a4a19', margin: '12px 0 10px 0', opacity: 0.7 }} />
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8, fontFamily: 'QueensPark, serif', textAlign: 'center' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8, fontFamily: 'Sudbury, serif', textAlign: 'center' }}>
             <div style={{ flex: 1 }}>
-              <div style={{ color: '#7a4a19', fontWeight: 700, fontSize: 16, textTransform: 'uppercase', letterSpacing: '1px' }}>{dict.body}</div>
-              <div style={{ color: '#7a4a19', fontWeight: 700, fontSize: 24, fontFamily: 'Sudbury, serif' }}>{monster.body || '2'}</div>
+              <div style={{ color: '#b33a1a', fontWeight: 700, fontSize: 12.7, textTransform: 'uppercase', letterSpacing: '1px' }}>{dict.body}</div>
+              <div style={{ color: '#7a4a19', fontWeight: 400, fontSize: 14.9, fontVariant: 'small-caps' }}>{monster.body || '2'}</div>
             </div>
             <div style={{ flex: 1 }}>
-              <div style={{ color: '#7a4a19', fontWeight: 700, fontSize: 16, textTransform: 'uppercase', letterSpacing: '1px' }}>{dict.mind}</div>
-              <div style={{ color: '#7a4a19', fontWeight: 700, fontSize: 24, fontFamily: 'Sudbury, serif' }}>{monster.mind || '4'}</div>
+              <div style={{ color: '#b33a1a', fontWeight: 700, fontSize: 12.7, textTransform: 'uppercase', letterSpacing: '1px' }}>{dict.mind}</div>
+              <div style={{ color: '#7a4a19', fontWeight: 400, fontSize: 14.9, fontVariant: 'small-caps' }}>{monster.mind || '4'}</div>
             </div>
             <div style={{ flex: 1 }}>
-              <div style={{ color: '#7a4a19', fontWeight: 700, fontSize: 16, textTransform: 'uppercase', letterSpacing: '1px' }}>{dict.magic}</div>
-              <div style={{ color: '#7a4a19', fontWeight: 700, fontSize: 24, fontFamily: 'Sudbury, serif' }}>{monster.magic || '3'}</div>
+              <div style={{ color: '#b33a1a', fontWeight: 700, fontSize: 12.7, textTransform: 'uppercase', letterSpacing: '1px' }}>{dict.magic}</div>
+              <div style={{ color: '#7a4a19', fontWeight: 400, fontSize: 14.9, fontVariant: 'small-caps' }}>{monster.magic || '3'}</div>
             </div>
           </div>
           
@@ -298,10 +299,10 @@ function MonsterCard({ monster, dict }: MonsterCardProps) {
           {/* Abilities */}
           {hasAbilities && (
             <>
-              <h3 style={{ color: '#7a4a19', fontFamily: 'QueensPark, serif', fontWeight: 700, fontSize: 18, textTransform: 'uppercase', marginBottom: 2, letterSpacing: '1px', textAlign: 'left' }}>{dict.cardHeaders.abilities}</h3>
-              <div style={{ fontFamily: 'Sudbury, serif', fontSize: 16, textAlign: 'left' }}>
+              <h3 style={{ color: '#b33a1a', fontFamily: 'Sudbury, serif', fontWeight: 700, fontStyle: 'italic', fontSize: 10, textTransform: 'uppercase', marginBottom: 2, letterSpacing: '1px', textAlign: 'left' }}>{dict.cardHeaders.abilities}</h3>
+              <div style={{ fontFamily: 'Sudbury, serif', fontSize: 10, textAlign: 'left' }}>
                 {monster.abilities.filter(ability => ability.name).map((ability) => (
-                  <div key={ability.id} style={{ color: '#7a4a19', fontSize: 16, marginBottom: 2 }}>
+                  <div key={ability.id} style={{ color: '#7a4a19', fontSize: 10, marginBottom: 2 }}>
                     <span style={{ fontWeight: 700, fontStyle: 'italic' }}>{ability.name}.</span>
                     {ability.desc && <span style={{ marginLeft: 4, fontWeight: 400 }}>{ability.desc}</span>}
                   </div>
@@ -316,10 +317,10 @@ function MonsterCard({ monster, dict }: MonsterCardProps) {
               {hasAbilities && (
                 <hr style={{ width: '100%', border: 'none', borderTop: '2px solid #7a4a19', margin: '12px 0 10px 0', opacity: 0.7 }} />
               )}
-              <h3 style={{ color: '#7a4a19', fontFamily: 'QueensPark, serif', fontWeight: 700, fontSize: 18, textTransform: 'uppercase', marginBottom: 2, letterSpacing: '1px', textAlign: 'left' }}>{dict.cardHeaders.spells}</h3>
-              <div style={{ fontFamily: 'Sudbury, serif', fontSize: 16, textAlign: 'left' }}>
+              <h3 style={{ color: '#b33a1a', fontFamily: 'Sudbury, serif', fontWeight: 700, fontStyle: 'italic', fontSize: 10, textTransform: 'uppercase', marginBottom: 2, letterSpacing: '1px', textAlign: 'left' }}>{dict.cardHeaders.spells}</h3>
+              <div style={{ fontFamily: 'Sudbury, serif', fontSize: 10, textAlign: 'left' }}>
                 {monster.spells.filter(spell => spell.name).map((spell) => (
-                  <div key={spell.id} style={{ color: '#7a4a19', fontSize: 16, marginBottom: 2 }}>
+                  <div key={spell.id} style={{ color: '#7a4a19', fontSize: 10, marginBottom: 2 }}>
                     <span style={{ fontWeight: 700, fontStyle: 'italic' }}>{spell.name}.</span>
                     {spell.desc && <span style={{ marginLeft: 4, fontWeight: 400 }}>{spell.desc}</span>}
                   </div>
