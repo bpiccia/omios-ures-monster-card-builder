@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monster Card Maker - Embeddable Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        button:hover {
+            background: #2563eb;
+        }
+    </style>
+</head>
+<body>
+    <h1>Monster Card Maker - Embeddable Demo</h1>
+    
+    <p>This page demonstrates how to embed the Monster Card Maker as a modal on any website.</p>
+    
+    <h2>Basic Usage</h2>
+    <button onclick="window.OmiosUriesCardMaker.init()">
+        Open Monster Card Maker
+    </button>
+    
+    <h2>With Portuguese Language</h2>
+    <button onclick="window.OmiosUriesCardMaker.init({ lang: 'pt-BR' })">
+        Abrir Criador de Cartas (Portuguese)
+    </button>
+    
+    <h2>With Custom Background</h2>
+    <button onclick="window.OmiosUriesCardMaker.init({ backgroundUrl: '/parchment.svg' })">
+        Open with SVG Background
+    </button>
+    
+    <h2>Integration Instructions</h2>
+    <p>To integrate this into your website:</p>
+    <ol>
+        <li>Include React and ReactDOM in your page</li>
+        <li>Include the built bundle: <code>omios-uries-card-maker.js</code></li>
+        <li>Call <code>window.OmiosUriesCardMaker.init()</code> to open the modal</li>
+    </ol>
+    
+    <pre><code>&lt;script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"&gt;&lt;/script&gt;
+&lt;script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"&gt;&lt;/script&gt;
+&lt;script src="./dist/omios-uries-card-maker.js"&gt;&lt;/script&gt;
+
+&lt;button onclick="window.OmiosUriesCardMaker.init()"&gt;
+    Open Monster Card Maker
+&lt;/button&gt;</code></pre>
+
+    <!-- Include React and ReactDOM for the embeddable version -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- This would be your built embeddable bundle -->
+    <!-- <script src="./dist/omios-uries-card-maker.js"></script> -->
+    
+    <script>
+        // For demo purposes, show an alert if the embeddable isn't loaded
+        if (typeof window.OmiosUriesCardMaker === 'undefined') {
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                button.addEventListener('click', () => {
+                    alert('To test the embeddable version, build the project with "npm run build:embed" and serve the built files.');
+                });
+            });
+        }
+    </script>
+</body>
+</html>

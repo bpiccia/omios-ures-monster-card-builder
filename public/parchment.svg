@@ -1,0 +1,12 @@
+<!-- This SVG serves as a fallback parchment background -->
+<svg width="420" height="600" viewBox="0 0 420 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="parchment" cx="50%" cy="40%" r="80%">
+      <stop offset="0%" stop-color="#f9f6f0"/>
+      <stop offset="70%" stop-color="#f4f1e8"/>
+      <stop offset="100%" stop-color="#e8e2d5"/>
+    </radialGradient>
+  </defs>
+  <rect width="420" height="600" fill="url(#parchment)" rx="8" ry="8"/>
+  <rect width="420" height="600" fill="none" stroke="#d4af37" stroke-width="2" rx="8" ry="8"/>
+</svg>
