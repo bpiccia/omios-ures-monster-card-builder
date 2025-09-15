@@ -132,7 +132,7 @@ interface MonsterCardProps {
 }
 
 // Background component: renders seamless scroll background
-function CardBackground({ height, contentHeight }: { readonly height: number, readonly contentHeight: number }) {
+function CardBackground({ height }: { readonly height: number, readonly contentHeight: number }) {
   // Adjusted values for smaller card size (360px max-width)
   // More aggressive middle image creation to prevent text overflow
   
