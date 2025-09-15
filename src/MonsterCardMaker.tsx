@@ -18,7 +18,7 @@ Or create a tiny src/index-embed.ts that import './MonsterCardMaker' and re-expo
 import React, { useState, useEffect, useCallback } from 'react';
 import { createRoot } from 'react-dom/client';
 import { toPng } from 'html-to-image';
-import type { Monster, Ability, Spell, Language, Dictionary } from './types';
+import type { Monster, Ability, SpecialAttack, Spell, Language, Dictionary } from './types';
 import './fonts.css';
 
 const dictionaries = {
@@ -38,6 +38,7 @@ const dictionaries = {
     spellName: "Spell name",
     spellDesc: "Description",
     hasAbilities: "Has abilities",
+    hasSpecialAttacks: "Has special attacks",
     hasSpells: "Has spells",
     language: "Language",
     exportPng: "Export PNG",
@@ -46,12 +47,17 @@ const dictionaries = {
     stats: "Stats",
     abilityName: "Ability name",
     abilityDesc: "Ability description",
+    specialAttackName: "Special attack name",
+    specialAttackDesc: "Special attack description",
     addAbility: "Add ability",
+    addSpecialAttack: "Add special attack",
     addSpell: "Add spell",
     abilities: "Abilities",
+    specialAttacks: "Special Attacks",
     spells: "Spells",
     cardHeaders: {
       abilities: "Abilities",
+      specialAttacks: "Special Attacks",
       spells: "Spells"
     }
   },
@@ -71,6 +77,7 @@ const dictionaries = {
     spellName: "Nome da magia",
     spellDesc: "Descrição",
     hasAbilities: "Tem habilidades",
+    hasSpecialAttacks: "Tem ataques especiais",
     hasSpells: "Tem magias",
     language: "Idioma",
     exportPng: "Exportar PNG",
@@ -79,12 +86,17 @@ const dictionaries = {
     stats: "Atributos",
     abilityName: "Nome da habilidade",
     abilityDesc: "Descrição da habilidade",
+    specialAttackName: "Nome do ataque especial",
+    specialAttackDesc: "Descrição do ataque especial",
     addAbility: "Adicionar habilidade",
+    addSpecialAttack: "Adicionar ataque especial",
     addSpell: "Adicionar magia",
     abilities: "Habilidades",
+    specialAttacks: "Ataques Especiais",
     spells: "Magias",
     cardHeaders: {
       abilities: "Habilidades",
+      specialAttacks: "Ataques Especiais",
       spells: "Magias"
     }
   }
@@ -101,8 +113,10 @@ const defaultMonster: Monster = {
   mind: "",
   magic: "",
   abilities: [],
+  specialAttacks: [],
   spells: [],
   hasAbilities: false,
+  hasSpecialAttacks: false,
   hasSpells: false
 };
 
@@ -188,6 +202,7 @@ function CardBackground({ height, contentHeight }: { readonly height: number, re
 // MonsterCard component (cleaned)
 function MonsterCard({ monster, dict, onHeightChange }: MonsterCardProps) {
   const hasAbilities = monster.hasAbilities && monster.abilities.length > 0;
+  const hasSpecialAttacks = monster.hasSpecialAttacks && monster.specialAttacks.length > 0;
   const hasSpells = monster.hasSpells && monster.spells.length > 0;
 
   // Text container ref to measure actual content height
@@ -204,7 +219,7 @@ function MonsterCard({ monster, dict, onHeightChange }: MonsterCardProps) {
       }, 50);
       return () => clearTimeout(timer);
     }
-  }, [monster, dict, hasAbilities, hasSpells]);
+  }, [monster, dict, hasAbilities, hasSpecialAttacks, hasSpells]);
 
   // Image heights - these should match CardBackground values exactly
   const topImageHeight = 120;
@@ -300,7 +315,7 @@ function MonsterCard({ monster, dict, onHeightChange }: MonsterCardProps) {
           </div>
           
           {/* Dynamic content - flows through middle into bottom */}
-          {(hasAbilities || hasSpells) && (
+          {(hasAbilities || hasSpecialAttacks || hasSpells) && (
             <div style={{ display: 'flex', justifyContent: 'center', margin: '6px 0 4px 0' }}>
               <img src="/linebreak.png" alt="" style={{ width: '100%', height: 'auto', opacity: 0.7 }} />
             </div>
@@ -321,10 +336,30 @@ function MonsterCard({ monster, dict, onHeightChange }: MonsterCardProps) {
             </>
           )}
 
+          {/* Special Attacks */}
+          {hasSpecialAttacks && (
+            <>
+              {hasAbilities && (
+                <div style={{ display: 'flex', justifyContent: 'center', margin: '6px 0 4px 0' }}>
+                  <img src="/linebreak.png" alt="" style={{ width: '100%', height: 'auto', opacity: 0.7 }} />
+                </div>
+              )}
+              <h3 style={{ color: '#b33a1a', fontFamily: 'Sudbury, serif', fontWeight: 700, fontSize: 10, textTransform: 'uppercase', marginBottom: 1, letterSpacing: '1px', textAlign: 'left' }}>{dict.cardHeaders.specialAttacks}</h3>
+              <div style={{ fontFamily: 'Sudbury, serif', fontSize: 10, textAlign: 'left' }}>
+                {monster.specialAttacks.filter(specialAttack => specialAttack.name).map((specialAttack) => (
+                  <div key={specialAttack.id} style={{ fontSize: 10, marginBottom: 2 }}>
+                    <span style={{ color: '#000000', fontWeight: 700, fontStyle: 'italic' }}>{specialAttack.name}.</span>
+                    {specialAttack.desc && <span style={{ color: '#666666', marginLeft: 4, fontWeight: 400 }}>{specialAttack.desc}</span>}
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+
           {/* Spells */}
           {hasSpells && (
             <>
-              {hasAbilities && (
+              {(hasAbilities || hasSpecialAttacks) && (
                 <div style={{ display: 'flex', justifyContent: 'center', margin: '6px 0 4px 0' }}>
                   <img src="/linebreak.png" alt="" style={{ width: '100%', height: 'auto', opacity: 0.7 }} />
                 </div>
@@ -402,6 +437,27 @@ export default function MonsterCardMaker({
       )
     });
   }, [monster.abilities, updateMonster]);
+
+  const addSpecialAttack = useCallback(() => {
+    const newSpecialAttack: SpecialAttack = {
+      id: crypto.randomUUID(),
+      name: "",
+      desc: ""
+    };
+    updateMonster({ specialAttacks: [...monster.specialAttacks, newSpecialAttack] });
+  }, [monster.specialAttacks, updateMonster]);
+
+  const removeSpecialAttack = useCallback((id: string) => {
+    updateMonster({ specialAttacks: monster.specialAttacks.filter(sa => sa.id !== id) });
+  }, [monster.specialAttacks, updateMonster]);
+
+  const updateSpecialAttack = useCallback((id: string, updates: Partial<Omit<SpecialAttack, 'id'>>) => {
+    updateMonster({
+      specialAttacks: monster.specialAttacks.map(sa => 
+        sa.id === id ? { ...sa, ...updates } : sa
+      )
+    });
+  }, [monster.specialAttacks, updateMonster]);
 
   const addSpell = useCallback(() => {
     const newSpell: Spell = {
@@ -699,6 +755,60 @@ export default function MonsterCardMaker({
                       className="w-full px-4 py-2 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-blue-300 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                       {dict.addAbility}
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Special Attacks Toggle */}
+              <div>
+                <div className="flex items-center gap-2 mb-3">
+                  <input
+                    id="hasSpecialAttacks"
+                    type="checkbox"
+                    checked={monster.hasSpecialAttacks}
+                    onChange={(e) => updateMonster({ hasSpecialAttacks: e.target.checked })}
+                    className="w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+                  />
+                  <label htmlFor="hasSpecialAttacks" className="text-sm font-medium text-gray-700">
+                    {dict.hasSpecialAttacks}
+                  </label>
+                </div>
+                
+                {monster.hasSpecialAttacks && (
+                  <div className="space-y-3">
+                    {monster.specialAttacks.map((specialAttack) => (
+                      <div key={specialAttack.id} className="border rounded-lg p-4 bg-gray-50">
+                        <div className="flex items-start justify-between gap-2 mb-2">
+                          <input
+                            type="text"
+                            value={specialAttack.name}
+                            onChange={(e) => updateSpecialAttack(specialAttack.id, { name: e.target.value })}
+                            placeholder={dict.specialAttackName}
+                            className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                          <button
+                            onClick={() => removeSpecialAttack(specialAttack.id)}
+                            className="px-2 py-2 text-red-600 hover:bg-red-50 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+                            aria-label="Remove special attack"
+                          >
+                            ×
+                          </button>
+                        </div>
+                        <textarea
+                          value={specialAttack.desc}
+                          onChange={(e) => updateSpecialAttack(specialAttack.id, { desc: e.target.value })}
+                          placeholder={dict.specialAttackDesc}
+                          rows={2}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                    ))}
+                    <button
+                      onClick={addSpecialAttack}
+                      className="w-full px-4 py-2 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-blue-300 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      {dict.addSpecialAttack}
                     </button>
                   </div>
                 )}

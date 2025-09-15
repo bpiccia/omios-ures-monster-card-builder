@@ -10,6 +10,12 @@ export interface Spell {
   desc: string;
 }
 
+export interface SpecialAttack {
+  id: string;
+  name: string;
+  desc: string;
+}
+
 export interface Monster {
   name: string;
   sizeType: string;
@@ -21,8 +27,10 @@ export interface Monster {
   mind: number | "";
   magic: number | "";
   abilities: Ability[];
+  specialAttacks: SpecialAttack[];
   spells: Spell[];
   hasAbilities: boolean;
+  hasSpecialAttacks: boolean;
   hasSpells: boolean;
 }
 
@@ -43,14 +51,19 @@ export interface Dictionary {
   mind: string;
   magic: string;
   abilities: string;
+  specialAttacks: string;
   spells: string;
   addAbility: string;
+  addSpecialAttack: string;
   addSpell: string;
   abilityName: string;
   abilityDesc: string;
+  specialAttackName: string;
+  specialAttackDesc: string;
   spellName: string;
   spellDesc: string;
   hasAbilities: string;
+  hasSpecialAttacks: string;
   hasSpells: string;
   language: string;
   exportPng: string;
@@ -58,6 +71,7 @@ export interface Dictionary {
   reset: string;
   cardHeaders: {
     abilities: string;
+    specialAttacks: string;
     spells: string;
   };
 }
