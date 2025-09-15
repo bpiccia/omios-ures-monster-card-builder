@@ -114,6 +114,7 @@ interface MonsterCardMakerProps {
 interface MonsterCardProps {
   readonly monster: Monster;
   readonly dict: Dictionary;
+  readonly onHeightChange?: (height: number) => void;
 }
 
 // Background component: renders seamless scroll background
@@ -138,7 +139,7 @@ function CardBackground({ height, contentHeight }: { readonly height: number, re
   });
   
   return (
-    <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1, display: 'flex', flexDirection: 'column', border: '10px solid green' }}>
+    <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1, display: 'flex', flexDirection: 'column'}}>
       {/* Top image - natural aspect ratio at full width */}
       <img 
         src="/top.png" 
@@ -164,7 +165,6 @@ function CardBackground({ height, contentHeight }: { readonly height: number, re
             objectFit: 'contain',
             display: 'block',
             flexShrink: 0,
-            border: '3px solid pink'
           }} 
         />
       ))}
@@ -186,7 +186,7 @@ function CardBackground({ height, contentHeight }: { readonly height: number, re
 }
 
 // MonsterCard component (cleaned)
-function MonsterCard({ monster, dict }: MonsterCardProps) {
+function MonsterCard({ monster, dict, onHeightChange }: MonsterCardProps) {
   const hasAbilities = monster.hasAbilities && monster.abilities.length > 0;
   const hasSpells = monster.hasSpells && monster.spells.length > 0;
 
@@ -220,6 +220,13 @@ function MonsterCard({ monster, dict }: MonsterCardProps) {
   const effectiveTextHeight = Math.max(textHeight, calculatedMinHeight);
   const totalHeight = Math.max(350, effectiveTextHeight + topPadding + bottomPadding + 20); // Reduced minimums for smaller card
   
+  // Report height changes to parent
+  React.useEffect(() => {
+    if (onHeightChange && totalHeight > 0) {
+      onHeightChange(totalHeight);
+    }
+  }, [onHeightChange, totalHeight]);
+  
   console.log('Final Height Calculation:', {
     rawTextHeight: textHeight,
     effectiveTextHeight,
@@ -231,7 +238,7 @@ function MonsterCard({ monster, dict }: MonsterCardProps) {
   });
 
   return (
-    <div data-card className="w-full mx-auto" style={{ borderRadius: 16, boxShadow: '0 2px 16px #0002', overflow: 'visible', background: 'none', padding: 0, margin: 0, width: '100%', maxWidth: 360, position: 'relative', height: 'auto', minHeight: totalHeight, border: '5px solid blue' }}>
+    <div data-card className="w-full mx-auto" style={{ borderRadius: 16, boxShadow: '0 2px 16px #0002', overflow: 'visible', background: 'none', padding: 0, margin: 0, width: '100%', maxWidth: 360, position: 'relative', height: 'auto', minHeight: totalHeight+30}}>
       
       {/* Background Container - seamless scroll */}
       <CardBackground height={totalHeight} contentHeight={textHeight} />
@@ -248,7 +255,6 @@ function MonsterCard({ monster, dict }: MonsterCardProps) {
           display: 'flex', 
           justifyContent: 'center', 
           alignItems: 'flex-start',
-          border: '5px solid red',
           paddingTop: topPadding, // Apply padding as internal padding instead
           paddingBottom: bottomPadding, // Apply padding as internal padding instead
           boxSizing: 'border-box' // Include padding in height calculation
@@ -268,10 +274,10 @@ function MonsterCard({ monster, dict }: MonsterCardProps) {
           
           {/* Stats block */}
           <div style={{ fontFamily: 'Sudbury, serif', marginTop: '4px', marginBottom: 0, width: '100%', textAlign: 'left' }}>
-            <div style={{ fontWeight: 400, fontSize: 11.7, marginBottom: 2 }}><span style={{ color: '#b33a1a' }}><strong>{dict.hp}:</strong></span> <span style={{ color: '#000000' }}><strong>{monster.hp || '22'}</strong></span></div>
-            <div style={{ fontWeight: 400, fontSize: 11.7, marginBottom: 2 }}><span style={{ color: '#b33a1a' }}><strong>{dict.defense}:</strong></span> <span style={{ color: '#000000' }}><strong>{monster.defense || '6'}</strong></span></div>
-            <div style={{ fontWeight: 400, fontSize: 11.7, marginBottom: 2 }}><span style={{ color: '#b33a1a' }}><strong>{dict.speed}:</strong></span> <span style={{ color: '#000000' }}><strong>{monster.speed || '5'}</strong></span></div>
-            <div style={{ fontWeight: 400, fontSize: 11.7 }}><span style={{ color: '#b33a1a' }}><strong>{dict.damage}:</strong></span> <span style={{ color: '#000000' }}><strong>{monster.damage || '1d5 (Slimy Punting)'}</strong></span></div>
+            <div style={{ fontWeight: 400, fontSize: 11.7, marginBottom: 2 }}><span style={{ color: '#b33a1a' }}><strong>{dict.hp}:</strong></span> <span style={{ color: '#000000' }}>{monster.hp || '22'}</span></div>
+            <div style={{ fontWeight: 400, fontSize: 11.7, marginBottom: 2 }}><span style={{ color: '#b33a1a' }}><strong>{dict.defense}:</strong></span> <span style={{ color: '#000000' }}>{monster.defense || '6'}</span></div>
+            <div style={{ fontWeight: 400, fontSize: 11.7, marginBottom: 2 }}><span style={{ color: '#b33a1a' }}><strong>{dict.speed}:</strong></span> <span style={{ color: '#000000' }}>{monster.speed || '5'}</span></div>
+            <div style={{ fontWeight: 400, fontSize: 11.7 }}><span style={{ color: '#b33a1a' }}><strong>{dict.damage}:</strong></span> <span style={{ color: '#000000' }}>{monster.damage || '1d5 (Slimy Punting)'}</span></div>
           </div>
           
           {/* Attributes */}
@@ -346,6 +352,7 @@ export default function MonsterCardMaker({
 }: MonsterCardMakerProps = {}) {
   const [monster, setMonster] = useState<Monster>(defaultMonster);
   const [language, setLanguage] = useState<Language>(initialLang);
+  const [cardHeight, setCardHeight] = useState<number>(350); // Track card height for dynamic white container
 
   const dict = dictionaries[language];
 
@@ -754,11 +761,11 @@ export default function MonsterCardMaker({
           </div>
 
           {/* Preview Panel */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
+          <div className="bg-white rounded-lg shadow-lg p-6" style={{ minHeight: cardHeight + 80 }}>
             <h2 className="text-xl font-semibold mb-4 text-gray-800">{dict.preview}</h2>
             
-            <div className="flex justify-center">
-              <MonsterCard monster={monster} dict={dict} />
+            <div className="flex justify-center" style={{ paddingTop: 15, paddingBottom: 15 }}>
+              <MonsterCard monster={monster} dict={dict} onHeightChange={setCardHeight} />
             </div>
           </div>
         </div>
