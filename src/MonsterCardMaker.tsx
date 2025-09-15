@@ -118,17 +118,15 @@ interface MonsterCardProps {
 
 // Background component: renders seamless scroll background
 function CardBackground({ height, contentHeight }: { readonly height: number, readonly contentHeight: number }) {
-  // The actual rendered images will have different heights than our estimates
-  // Let's use a much simpler approach: 
-  // If the container is taller than a reasonable minimum, add 1 middle image
-  // If it's much taller, add more middle images proportionally
+  // Adjusted values for smaller card size (360px max-width)
+  // More aggressive middle image creation to prevent text overflow
   
-  const baseScrollHeight = 380; // Increased back up - better balance
-  const middleImageNaturalHeight = 180; // Keep this the same
+  const baseScrollHeight = 250; // Further reduced to trigger middle images sooner
+  const middleImageNaturalHeight = 100; // Smaller middle sections for tighter control
   
-  // Only add middle images if we need more space than the base scroll provides
+  // Create middle images more aggressively to prevent text overflow
   const extraSpaceNeeded = Math.max(0, height - baseScrollHeight);
-  const middleImagesNeeded = extraSpaceNeeded > 0 ? Math.ceil(extraSpaceNeeded / middleImageNaturalHeight) : 1;
+  const middleImagesNeeded = extraSpaceNeeded > 0 ? Math.ceil(extraSpaceNeeded / middleImageNaturalHeight) : 0;
   
   console.log('CardBackground Heights:', {
     containerHeight: height,
@@ -213,14 +211,14 @@ function MonsterCard({ monster, dict }: MonsterCardProps) {
   const bottomImageHeight = 80;
   
   // Padding calculations - text should start inside top image and end inside bottom image
-  const topPadding = 60; // increased padding for top image
-  const bottomPadding = 90; // Reduced from 120 - still protective but less aggressive
+  const topPadding = 25; // reduced padding for top image to accommodate smaller card width
+  const bottomPadding = 50; // Further reduced to prevent overflow into bottom section
   
   // Total height = measured content + padding for positioning within images
-  // If measured height seems too small, use a calculated fallback
-  const calculatedMinHeight = 200; // Reduced base content estimate
+  // Adjusted for smaller card size - use more conservative minimums
+  const calculatedMinHeight = 120; // Further reduced for smaller cards
   const effectiveTextHeight = Math.max(textHeight, calculatedMinHeight);
-  const totalHeight = Math.max(450, effectiveTextHeight + topPadding + bottomPadding + 30); // Reduced buffer from 50 to 30
+  const totalHeight = Math.max(350, effectiveTextHeight + topPadding + bottomPadding + 20); // Reduced minimums for smaller card
   
   console.log('Final Height Calculation:', {
     rawTextHeight: textHeight,
@@ -233,7 +231,7 @@ function MonsterCard({ monster, dict }: MonsterCardProps) {
   });
 
   return (
-    <div data-card className="w-full mx-auto" style={{ borderRadius: 16, boxShadow: '0 2px 16px #0002', overflow: 'visible', background: 'none', padding: 0, margin: 0, width: '100%', position: 'relative', height: 'auto', minHeight: totalHeight, border: '5px solid blue' }}>
+    <div data-card className="w-full mx-auto" style={{ borderRadius: 16, boxShadow: '0 2px 16px #0002', overflow: 'visible', background: 'none', padding: 0, margin: 0, width: '100%', maxWidth: 360, position: 'relative', height: 'auto', minHeight: totalHeight, border: '5px solid blue' }}>
       
       {/* Background Container - seamless scroll */}
       <CardBackground height={totalHeight} contentHeight={textHeight} />
@@ -262,14 +260,14 @@ function MonsterCard({ monster, dict }: MonsterCardProps) {
         >
           
           {/* Title and basic info - starts in top image */}
-          <div style={{ fontFamily: 'Sudbury, serif', color: '#7a4a19', fontWeight: 700, fontSize: 22.5, textAlign: 'center', letterSpacing: '1px', marginBottom: 0, fontVariant: 'small-caps' }}>{monster.name || 'Xaracol'}</div>
-          <div style={{ fontFamily: 'QueensPark, serif', fontStyle: 'italic', color: '#7a4a19', fontSize: 11.7, textAlign: 'center', marginTop: '2px' }}>{monster.sizeType || 'Large Animal'}</div>
-          <div style={{ display: 'flex', justifyContent: 'center', margin: '12px auto 0 auto' }}>
+          <div style={{ fontFamily: 'Sudbury, serif', color: '#000000', fontWeight: 700, fontSize: 22.5, textAlign: 'center', letterSpacing: '1px', marginBottom: 0, fontVariant: 'small-caps' }}>{monster.name || 'Xaracol'}</div>
+          <div style={{ fontFamily: 'QueensPark, serif', fontStyle: 'italic', color: '#666666', fontSize: 11.7, textAlign: 'center', marginTop: '2px' }}>{monster.sizeType || 'Large Animal'}</div>
+          <div style={{ display: 'flex', justifyContent: 'center', margin: '6px auto 0 auto' }}>
             <img src="/linebreak.png" alt="" style={{ width: '100%', height: 'auto', opacity: 0.7 }} />
           </div>
           
           {/* Stats block */}
-          <div style={{ fontFamily: 'Sudbury, serif', marginTop: '8px', marginBottom: 0, width: '100%', textAlign: 'left' }}>
+          <div style={{ fontFamily: 'Sudbury, serif', marginTop: '4px', marginBottom: 0, width: '100%', textAlign: 'left' }}>
             <div style={{ fontWeight: 400, fontSize: 11.7, marginBottom: 2 }}><span style={{ color: '#b33a1a' }}><strong>{dict.hp}:</strong></span> <span style={{ color: '#000000' }}><strong>{monster.hp || '22'}</strong></span></div>
             <div style={{ fontWeight: 400, fontSize: 11.7, marginBottom: 2 }}><span style={{ color: '#b33a1a' }}><strong>{dict.defense}:</strong></span> <span style={{ color: '#000000' }}><strong>{monster.defense || '6'}</strong></span></div>
             <div style={{ fontWeight: 400, fontSize: 11.7, marginBottom: 2 }}><span style={{ color: '#b33a1a' }}><strong>{dict.speed}:</strong></span> <span style={{ color: '#000000' }}><strong>{monster.speed || '5'}</strong></span></div>
@@ -277,27 +275,27 @@ function MonsterCard({ monster, dict }: MonsterCardProps) {
           </div>
           
           {/* Attributes */}
-          <div style={{ display: 'flex', justifyContent: 'center', margin: '12px 0 10px 0' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', margin: '6px 0 4px 0' }}>
             <img src="/linebreak.png" alt="" style={{ width: '100%', height: 'auto', opacity: 0.7 }} />
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8, fontFamily: 'Sudbury, serif', textAlign: 'center' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4, fontFamily: 'Sudbury, serif', textAlign: 'center' }}>
             <div style={{ flex: 1 }}>
               <div style={{ color: '#b33a1a', fontWeight: 700, fontSize: 12.7, textTransform: 'uppercase', letterSpacing: '1px' }}>{dict.body}</div>
-              <div style={{ color: '#7a4a19', fontWeight: 400, fontSize: 14.9, fontVariant: 'small-caps' }}>{monster.body || '2'}</div>
+              <div style={{ color: '#000000', fontWeight: 400, fontSize: 14.9, fontVariant: 'small-caps' }}>{monster.body || '2'}</div>
             </div>
             <div style={{ flex: 1 }}>
               <div style={{ color: '#b33a1a', fontWeight: 700, fontSize: 12.7, textTransform: 'uppercase', letterSpacing: '1px' }}>{dict.mind}</div>
-              <div style={{ color: '#7a4a19', fontWeight: 400, fontSize: 14.9, fontVariant: 'small-caps' }}>{monster.mind || '4'}</div>
+              <div style={{ color: '#000000', fontWeight: 400, fontSize: 14.9, fontVariant: 'small-caps' }}>{monster.mind || '4'}</div>
             </div>
             <div style={{ flex: 1 }}>
               <div style={{ color: '#b33a1a', fontWeight: 700, fontSize: 12.7, textTransform: 'uppercase', letterSpacing: '1px' }}>{dict.magic}</div>
-              <div style={{ color: '#7a4a19', fontWeight: 400, fontSize: 14.9, fontVariant: 'small-caps' }}>{monster.magic || '3'}</div>
+              <div style={{ color: '#000000', fontWeight: 400, fontSize: 14.9, fontVariant: 'small-caps' }}>{monster.magic || '3'}</div>
             </div>
           </div>
           
           {/* Dynamic content - flows through middle into bottom */}
           {(hasAbilities || hasSpells) && (
-            <div style={{ display: 'flex', justifyContent: 'center', margin: '12px 0 10px 0' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', margin: '6px 0 4px 0' }}>
               <img src="/linebreak.png" alt="" style={{ width: '100%', height: 'auto', opacity: 0.7 }} />
             </div>
           )}
@@ -305,12 +303,12 @@ function MonsterCard({ monster, dict }: MonsterCardProps) {
           {/* Abilities */}
           {hasAbilities && (
             <>
-              <h3 style={{ color: '#b33a1a', fontFamily: 'Sudbury, serif', fontWeight: 700, fontStyle: 'italic', fontSize: 10, textTransform: 'uppercase', marginBottom: 2, letterSpacing: '1px', textAlign: 'left' }}>{dict.cardHeaders.abilities}</h3>
+              <h3 style={{ color: '#b33a1a', fontFamily: 'Sudbury, serif', fontWeight: 700, fontSize: 10, textTransform: 'uppercase', marginBottom: 1, letterSpacing: '1px', textAlign: 'left' }}>{dict.cardHeaders.abilities}</h3>
               <div style={{ fontFamily: 'Sudbury, serif', fontSize: 10, textAlign: 'left' }}>
                 {monster.abilities.filter(ability => ability.name).map((ability) => (
-                  <div key={ability.id} style={{ color: '#7a4a19', fontSize: 10, marginBottom: 2 }}>
-                    <span style={{ fontWeight: 700, fontStyle: 'italic' }}>{ability.name}.</span>
-                    {ability.desc && <span style={{ marginLeft: 4, fontWeight: 400 }}>{ability.desc}</span>}
+                  <div key={ability.id} style={{ fontSize: 10, marginBottom: 2 }}>
+                    <span style={{ color: '#000000', fontWeight: 700, fontStyle: 'italic' }}>{ability.name}.</span>
+                    {ability.desc && <span style={{ color: '#666666', marginLeft: 4, fontWeight: 400 }}>{ability.desc}</span>}
                   </div>
                 ))}
               </div>
@@ -321,16 +319,16 @@ function MonsterCard({ monster, dict }: MonsterCardProps) {
           {hasSpells && (
             <>
               {hasAbilities && (
-                <div style={{ display: 'flex', justifyContent: 'center', margin: '12px 0 10px 0' }}>
+                <div style={{ display: 'flex', justifyContent: 'center', margin: '6px 0 4px 0' }}>
                   <img src="/linebreak.png" alt="" style={{ width: '100%', height: 'auto', opacity: 0.7 }} />
                 </div>
               )}
-              <h3 style={{ color: '#b33a1a', fontFamily: 'Sudbury, serif', fontWeight: 700, fontStyle: 'italic', fontSize: 10, textTransform: 'uppercase', marginBottom: 2, letterSpacing: '1px', textAlign: 'left' }}>{dict.cardHeaders.spells}</h3>
+              <h3 style={{ color: '#b33a1a', fontFamily: 'Sudbury, serif', fontWeight: 700, fontSize: 10, textTransform: 'uppercase', marginBottom: 1, letterSpacing: '1px', textAlign: 'left' }}>{dict.cardHeaders.spells}</h3>
               <div style={{ fontFamily: 'Sudbury, serif', fontSize: 10, textAlign: 'left' }}>
                 {monster.spells.filter(spell => spell.name).map((spell) => (
-                  <div key={spell.id} style={{ color: '#7a4a19', fontSize: 10, marginBottom: 2 }}>
-                    <span style={{ fontWeight: 700, fontStyle: 'italic' }}>{spell.name}.</span>
-                    {spell.desc && <span style={{ marginLeft: 4, fontWeight: 400 }}>{spell.desc}</span>}
+                  <div key={spell.id} style={{ fontSize: 10, marginBottom: 2 }}>
+                    <span style={{ color: '#000000', fontWeight: 700, fontStyle: 'italic' }}>{spell.name}.</span>
+                    {spell.desc && <span style={{ color: '#666666', marginLeft: 4, fontWeight: 400 }}>{spell.desc}</span>}
                   </div>
                 ))}
               </div>
