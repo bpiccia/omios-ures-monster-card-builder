@@ -264,7 +264,9 @@ function MonsterCard({ monster, dict }: MonsterCardProps) {
           {/* Title and basic info - starts in top image */}
           <div style={{ fontFamily: 'Sudbury, serif', color: '#7a4a19', fontWeight: 700, fontSize: 22.5, textAlign: 'center', letterSpacing: '1px', marginBottom: 0, fontVariant: 'small-caps' }}>{monster.name || 'Xaracol'}</div>
           <div style={{ fontFamily: 'QueensPark, serif', fontStyle: 'italic', color: '#7a4a19', fontSize: 11.7, textAlign: 'center', marginTop: '2px' }}>{monster.sizeType || 'Large Animal'}</div>
-          <hr style={{ width: '60%', border: 'none', borderTop: '2px solid #7a4a19', margin: '12px auto 0 auto', opacity: 0.7 }} />
+          <div style={{ display: 'flex', justifyContent: 'center', margin: '12px auto 0 auto' }}>
+            <img src="/linebreak.png" alt="" style={{ width: '100%', height: 'auto', opacity: 0.7 }} />
+          </div>
           
           {/* Stats block */}
           <div style={{ fontFamily: 'Sudbury, serif', marginTop: '8px', marginBottom: 0, width: '100%', textAlign: 'left' }}>
@@ -275,7 +277,9 @@ function MonsterCard({ monster, dict }: MonsterCardProps) {
           </div>
           
           {/* Attributes */}
-          <hr style={{ width: '100%', border: 'none', borderTop: '2px solid #7a4a19', margin: '12px 0 10px 0', opacity: 0.7 }} />
+          <div style={{ display: 'flex', justifyContent: 'center', margin: '12px 0 10px 0' }}>
+            <img src="/linebreak.png" alt="" style={{ width: '100%', height: 'auto', opacity: 0.7 }} />
+          </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8, fontFamily: 'Sudbury, serif', textAlign: 'center' }}>
             <div style={{ flex: 1 }}>
               <div style={{ color: '#b33a1a', fontWeight: 700, fontSize: 12.7, textTransform: 'uppercase', letterSpacing: '1px' }}>{dict.body}</div>
@@ -293,7 +297,9 @@ function MonsterCard({ monster, dict }: MonsterCardProps) {
           
           {/* Dynamic content - flows through middle into bottom */}
           {(hasAbilities || hasSpells) && (
-            <hr style={{ width: '100%', border: 'none', borderTop: '2px solid #7a4a19', margin: '12px 0 10px 0', opacity: 0.7 }} />
+            <div style={{ display: 'flex', justifyContent: 'center', margin: '12px 0 10px 0' }}>
+              <img src="/linebreak.png" alt="" style={{ width: '100%', height: 'auto', opacity: 0.7 }} />
+            </div>
           )}
 
           {/* Abilities */}
@@ -315,7 +321,9 @@ function MonsterCard({ monster, dict }: MonsterCardProps) {
           {hasSpells && (
             <>
               {hasAbilities && (
-                <hr style={{ width: '100%', border: 'none', borderTop: '2px solid #7a4a19', margin: '12px 0 10px 0', opacity: 0.7 }} />
+                <div style={{ display: 'flex', justifyContent: 'center', margin: '12px 0 10px 0' }}>
+                  <img src="/linebreak.png" alt="" style={{ width: '100%', height: 'auto', opacity: 0.7 }} />
+                </div>
               )}
               <h3 style={{ color: '#b33a1a', fontFamily: 'Sudbury, serif', fontWeight: 700, fontStyle: 'italic', fontSize: 10, textTransform: 'uppercase', marginBottom: 2, letterSpacing: '1px', textAlign: 'left' }}>{dict.cardHeaders.spells}</h3>
               <div style={{ fontFamily: 'Sudbury, serif', fontSize: 10, textAlign: 'left' }}>
