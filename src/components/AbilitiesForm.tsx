@@ -2,7 +2,6 @@ import { Monster, Dictionary, Ability } from '../types';
 
 interface AbilitiesFormProps {
   readonly monster: Monster;
-  readonly updateMonster: (updates: Partial<Monster>) => void;
   readonly addAbility: () => void;
   readonly removeAbility: (id: string) => void;
   readonly updateAbility: (id: string, updates: Partial<Omit<Ability, 'id'>>) => void;
@@ -11,7 +10,6 @@ interface AbilitiesFormProps {
 
 export function AbilitiesForm({ 
   monster, 
-  updateMonster, 
   addAbility, 
   removeAbility, 
   updateAbility, 

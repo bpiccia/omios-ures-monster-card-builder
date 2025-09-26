@@ -13,7 +13,6 @@ export function MonsterCard({ monster, dict, onHeightChange }: MonsterCardProps)
   const topImageHeight = 194.92;
   const middleImageHeight = 85.42;
   const bottomImageHeight = 103.77;
-  const baseScrollHeight = topImageHeight + bottomImageHeight; // Base height without middle images
   
   const hasAbilities = monster.hasAbilities && monster.abilities.length > 0;
   const hasSpecialAttacks = monster.hasSpecialAttacks && monster.specialAttacks.length > 0;
@@ -44,11 +43,6 @@ export function MonsterCard({ monster, dict, onHeightChange }: MonsterCardProps)
   // Padding calculations - text should start inside top image and end inside bottom image
   const topPadding = 35;
   const bottomPadding = 40;
-  
-  // Calculate required content space including padding
-  const calculatedMinHeight = 120;
-  const effectiveTextHeight = Math.max(textHeight, calculatedMinHeight);
-  const requiredContentHeight = effectiveTextHeight + topPadding + bottomPadding;
   
   // Report height changes to parent
   React.useEffect(() => {
@@ -85,7 +79,6 @@ export function MonsterCard({ monster, dict, onHeightChange }: MonsterCardProps)
       {/* Text Container - overlays background */}
       <CardContent 
         monster={monster}
-        height= {totalHeight}
         dict={dict}
         textRef={textRef}
         topPadding={topPadding}

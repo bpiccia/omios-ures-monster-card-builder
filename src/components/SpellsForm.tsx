@@ -2,7 +2,6 @@ import { Monster, Dictionary, Spell } from '../types';
 
 interface SpellsFormProps {
   readonly monster: Monster;
-  readonly updateMonster: (updates: Partial<Monster>) => void;
   readonly addSpell: () => void;
   readonly removeSpell: (id: string) => void;
   readonly updateSpell: (id: string, updates: Partial<Omit<Spell, 'id'>>) => void;
@@ -11,7 +10,6 @@ interface SpellsFormProps {
 
 export function SpellsForm({ 
   monster, 
-  updateMonster, 
   addSpell, 
   removeSpell, 
   updateSpell, 

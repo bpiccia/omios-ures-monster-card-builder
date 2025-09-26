@@ -6,7 +6,6 @@ interface CardContentProps {
   readonly monster: Monster;
   readonly dict: Dictionary;
   readonly textRef: React.RefObject<HTMLDivElement>;
-  readonly height: number;
   readonly topPadding: number;
   readonly totalHeight: number;
   readonly bottomPadding: number;
@@ -17,7 +16,6 @@ export function CardContent({
   dict, 
   textRef, 
   topPadding, 
-  height,
   totalHeight, 
   bottomPadding 
 }: CardContentProps) {

@@ -19,7 +19,7 @@ interface MonsterCardMakerProps {
 
 export default function MonsterCardMaker({ 
   initialLang = "en" 
-}: MonsterCardMakerProps = {}) {
+}: Readonly<MonsterCardMakerProps>) {
   const [language, setLanguage] = React.useState<Language>(initialLang);
   const {
     monster,
@@ -33,7 +33,7 @@ export default function MonsterCardMaker({
     addSpell,
     removeSpell,
     updateSpell,
-    resetMonster
+    resetForm
   } = useMonster();
 
   const dict = dictionaries[language];
@@ -151,7 +151,6 @@ export default function MonsterCardMaker({
         {monster.hasAbilities && (
           <AbilitiesForm 
             monster={monster} 
-            updateMonster={updateMonster}
             addAbility={addAbility}
             removeAbility={removeAbility}
             updateAbility={updateAbility}
@@ -179,7 +178,6 @@ export default function MonsterCardMaker({
         {monster.hasSpecialAttacks && (
           <SpecialAttacksForm 
             monster={monster} 
-            updateMonster={updateMonster}
             addSpecialAttack={addSpecialAttack}
             removeSpecialAttack={removeSpecialAttack}
             updateSpecialAttack={updateSpecialAttack}
@@ -207,7 +205,6 @@ export default function MonsterCardMaker({
         {monster.hasSpells && (
           <SpellsForm 
             monster={monster} 
-            updateMonster={updateMonster}
             addSpell={addSpell}
             removeSpell={removeSpell}
             updateSpell={updateSpell}
@@ -246,7 +243,7 @@ export default function MonsterCardMaker({
             {dict.copyPng}
           </button>
           <button 
-            onClick={resetMonster}
+            onClick={resetForm}
             style={{ 
               padding: '10px 15px', 
               backgroundColor: '#dc3545', 
@@ -283,7 +280,7 @@ export default function MonsterCardMaker({
 }
 
 // For embedding in other applications
-export function initEmbeddable(containerId: string, props: MonsterCardMakerProps = {}) {
+export function initEmbeddable(containerId: string, props: MonsterCardMakerProps = { initialLang: "en" }) {
   const container = document.getElementById(containerId);
   if (!container) {
     console.error(`Container with id "${containerId}" not found`);

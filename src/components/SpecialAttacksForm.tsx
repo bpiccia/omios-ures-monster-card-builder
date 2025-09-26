@@ -2,7 +2,6 @@ import { Monster, Dictionary, SpecialAttack } from '../types';
 
 interface SpecialAttacksFormProps {
   readonly monster: Monster;
-  readonly updateMonster: (updates: Partial<Monster>) => void;
   readonly addSpecialAttack: () => void;
   readonly removeSpecialAttack: (id: string) => void;
   readonly updateSpecialAttack: (id: string, updates: Partial<Omit<SpecialAttack, 'id'>>) => void;
@@ -11,7 +10,6 @@ interface SpecialAttacksFormProps {
 
 export function SpecialAttacksForm({ 
   monster, 
-  updateMonster, 
   addSpecialAttack, 
   removeSpecialAttack, 
   updateSpecialAttack, 
