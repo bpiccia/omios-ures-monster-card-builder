@@ -39,11 +39,11 @@ export function CardContent({
     >
       <div 
         ref={textRef}
-        style={{ paddingTop: topPadding, paddingBottom: bottomPadding, width: '65%', textAlign: 'left', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}
+        style={{ paddingTop: topPadding, paddingBottom: bottomPadding, width: '69%', textAlign: 'left', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}
       >
         
         {/* Title and basic info */}
-        <div className="monster-title">{monster.name || 'Xaracol'}</div>
+        <div className="monster-title">{monster.name || 'Monster Name'}</div>
         <div className="monster-size-type">{monster.sizeType || 'Size / Type'}</div>
         
         <div className="linebreak-container linebreak-small">
@@ -52,10 +52,10 @@ export function CardContent({
         
         {/* Stats block */}
         <div className="stats-container">
-          <div className="stat-row"><span className="stat-label"><strong>{dict.hp}:</strong></span> <span className="stat-value">{monster.hp || '22'}</span></div>
-          <div className="stat-row"><span className="stat-label"><strong>{dict.defense}:</strong></span> <span className="stat-value">{monster.defense || '6'}</span></div>
-          <div className="stat-row"><span className="stat-label"><strong>{dict.speed}:</strong></span> <span className="stat-value">{monster.speed || '5'}</span></div>
-          <div className="stat-row"><span className="stat-label"><strong>{dict.damage}:</strong></span> <span className="stat-value">{monster.damage || '1d3 (Slimy Punting)'}</span></div>
+          <div className="stat-row"><span className="stat-label">{dict.hp}:</span> <span className="stat-value">{monster.hp || '10'}</span></div>
+          <div className="stat-row"><span className="stat-label">{dict.defense}:</span> <span className="stat-value">{monster.defense || '10'}</span></div>
+          <div className="stat-row"><span className="stat-label">{dict.speed}:</span> <span className="stat-value">{monster.speed || '10'}</span></div>
+          <div className="stat-row"><span className="stat-label">{dict.damage}:</span> <span className="stat-value">{monster.damage || '1d6'}</span></div>
         </div>
         
         <div className="linebreak-container">
@@ -66,15 +66,15 @@ export function CardContent({
         <div className="attributes-container">
           <div className="attribute-item">
             <div className="attribute-label">{dict.body}</div>
-            <div className="attribute-value">{monster.body || '2'}</div>
+            <div className="attribute-value">{monster.body || '10'}</div>
           </div>
           <div className="attribute-item">
             <div className="attribute-label">{dict.mind}</div>
-            <div className="attribute-value">{monster.mind || '4'}</div>
+            <div className="attribute-value">{monster.mind || '10'}</div>
           </div>
           <div className="attribute-item">
             <div className="attribute-label">{dict.magic}</div>
-            <div className="attribute-value">{monster.magic || '3'}</div>
+            <div className="attribute-value">{monster.magic || '10'}</div>
           </div>
         </div>
         
