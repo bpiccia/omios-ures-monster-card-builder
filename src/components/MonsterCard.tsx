@@ -18,6 +18,10 @@ export function MonsterCard({ monster, dict, onHeightChange }: MonsterCardProps)
   const hasSpecialAttacks = monster.hasSpecialAttacks && monster.specialAttacks.length > 0;
   const hasSpells = monster.hasSpells && monster.spells.length > 0;
 
+  // Padding calculations - text should start inside top image and end inside bottom image
+  const topPadding = 35;
+  const bottomPadding = 15;
+
   // Text container ref to measure actual content height
   const textRef = React.useRef<HTMLDivElement>(null);
   const [textHeight, setTextHeight] = React.useState<number>(0);
@@ -30,19 +34,27 @@ export function MonsterCard({ monster, dict, onHeightChange }: MonsterCardProps)
       const timer = setTimeout(() => {
         const measuredHeight = textRef.current!.scrollHeight;
         setTextHeight(measuredHeight);
-        if (measuredHeight > totalHeight) {
-          setTotalHeight(totalHeight + middleImageHeight);
-          setNumberOfMiddleImages(numberOfMiddleImages + 1);
+        
+        // Calculate minimum height needed (top + bottom + padding)
+        const minHeightNeeded = topImageHeight + bottomImageHeight + topPadding + bottomPadding;
+        // Calculate total content height needed
+        const totalContentHeight = measuredHeight + topPadding + bottomPadding;
+        
+        // Calculate how many middle images we actually need
+        const middleSpaceNeeded = Math.max(0, totalContentHeight - minHeightNeeded);
+        const requiredMiddleImages = Math.max(1, Math.ceil(middleSpaceNeeded / middleImageHeight));
+        
+        // Only update if the number of middle images needs to change
+        if (requiredMiddleImages !== numberOfMiddleImages) {
+          setNumberOfMiddleImages(requiredMiddleImages);
+          const newTotalHeight = topImageHeight + (requiredMiddleImages * middleImageHeight) + bottomImageHeight;
+          setTotalHeight(newTotalHeight);
         }
-        console.log('Measured text content height:', measuredHeight);
+        
       }, 50);
       return () => clearTimeout(timer);
     }
-  }, [monster, dict, hasAbilities, hasSpecialAttacks, hasSpells]);
-
-  // Padding calculations - text should start inside top image and end inside bottom image
-  const topPadding = 35;
-  const bottomPadding = 40;
+  }, [monster, dict, hasAbilities, hasSpecialAttacks, hasSpells, topImageHeight, bottomImageHeight, middleImageHeight, numberOfMiddleImages]);
   
   // Report height changes to parent
   React.useEffect(() => {
