@@ -93,7 +93,7 @@ export default function MonsterCardMaker({
         overflowY: 'auto'
       }}>
         <h2 style={{ marginTop: 0, marginBottom: '20px', color: '#333' }}>{dict.form}</h2>
-        
+
         {/* Language selector */}
         <div style={{ marginBottom: '20px' }}>
           <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
@@ -104,9 +104,11 @@ export default function MonsterCardMaker({
             onChange={(e) => setLanguage(e.target.value as Language)}
             style={{ padding: '5px', fontSize: '14px' }}
           >
-            <option value="en">English</option>
-            <option value="es">Español</option>
-            <option value="de">Deutsch</option>
+            {Object.keys(dictionaries).map((lang) => (
+              <option key={lang} value={lang}>
+                {lang === 'en' ? 'English' : lang === 'pt-BR' ? 'Português (Brasil)' : lang}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -271,7 +273,7 @@ export default function MonsterCardMaker({
         borderRadius: '8px'
       }}>
         <h2 style={{ marginTop: 0, marginBottom: '20px', color: '#333' }}>{dict.preview}</h2>
-        <div style={{ transform: 'scale(1)', transformOrigin: 'top center' }}>
+        <div id='monster-card-preview' style={{ transform: 'scale(1)', transformOrigin: 'top center' }}>
           <MonsterCard monster={monster} dict={dict} />
         </div>
       </div>

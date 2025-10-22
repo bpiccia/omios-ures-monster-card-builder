@@ -70,7 +70,6 @@ export function MonsterCard({ monster, dict, onHeightChange }: MonsterCardProps)
         borderRadius: 8, 
         boxShadow: '0 2px 8px rgba(0,0,0,0.15)', 
         overflow: 'hidden', 
-        background: 'white',
         margin: '0 auto',
         width: '380px',  // Increased width for better visibility
         height: `${totalHeight}px`,
