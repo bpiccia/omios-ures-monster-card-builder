@@ -11,7 +11,7 @@ interface MonsterCardProps {
 
 export function MonsterCard({ monster, dict, onHeightChange }: MonsterCardProps) {
   const topImageHeight = 194.92;
-  const middleImageHeight = 85.42;
+  const middleImageHeight = 37.55;
   const bottomImageHeight = 103.77;
   
   const hasAbilities = monster.hasAbilities && monster.abilities.length > 0;
@@ -20,7 +20,7 @@ export function MonsterCard({ monster, dict, onHeightChange }: MonsterCardProps)
 
   // Padding calculations - text should start inside top image and end inside bottom image
   const topPadding = 35;
-  const bottomPadding = 15;
+  const bottomPadding = 20;
 
   // Text container ref to measure actual content height
   const textRef = React.useRef<HTMLDivElement>(null);
