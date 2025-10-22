@@ -24,7 +24,6 @@ export function MonsterCard({ monster, dict, onHeightChange }: MonsterCardProps)
 
   // Text container ref to measure actual content height
   const textRef = React.useRef<HTMLDivElement>(null);
-  const [textHeight, setTextHeight] = React.useState<number>(0);
   const [totalHeight, setTotalHeight] = React.useState<number>(topImageHeight + middleImageHeight + bottomImageHeight);
   const [numberOfMiddleImages, setNumberOfMiddleImages] = React.useState<number>(1);
   
@@ -33,7 +32,6 @@ export function MonsterCard({ monster, dict, onHeightChange }: MonsterCardProps)
       // Use a small delay to ensure content is fully rendered
       const timer = setTimeout(() => {
         const measuredHeight = textRef.current!.scrollHeight;
-        setTextHeight(measuredHeight);
         
         // Calculate minimum height needed (top + bottom + padding)
         const minHeightNeeded = topImageHeight + bottomImageHeight + topPadding + bottomPadding;
@@ -79,12 +77,7 @@ export function MonsterCard({ monster, dict, onHeightChange }: MonsterCardProps)
       
       {/* Background Container - seamless scroll */}
       <CardBackground 
-        height={totalHeight} 
-        topImageHeight={topImageHeight}
-        middleImageHeight={middleImageHeight} 
-        bottomImageHeight={bottomImageHeight}
         middleImagesNeeded={numberOfMiddleImages}
-        contentHeight={textHeight} 
       />
 
       {/* Text Container - overlays background */}

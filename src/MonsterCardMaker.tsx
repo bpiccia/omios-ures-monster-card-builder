@@ -92,24 +92,30 @@ export default function MonsterCardMaker({
         maxHeight: '90vh',
         overflowY: 'auto'
       }}>
-        <h2 style={{ marginTop: 0, marginBottom: '20px', color: '#333' }}>{dict.form}</h2>
-
-        {/* Language selector */}
-        <div style={{ marginBottom: '20px' }}>
-          <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-            {dict.language}:
-          </label>
-          <select 
-            value={language} 
-            onChange={(e) => setLanguage(e.target.value as Language)}
-            style={{ padding: '5px', fontSize: '14px' }}
-          >
-            {Object.keys(dictionaries).map((lang) => (
-              <option key={lang} value={lang}>
-                {lang === 'en' ? 'English' : lang === 'pt-BR' ? 'Português (Brasil)' : lang}
-              </option>
-            ))}
-          </select>
+        {/* Header with title and language selector */}
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center', 
+          marginBottom: '20px' 
+        }}>
+          <h2 style={{ margin: 0, color: '#333' }}>{dict.form}</h2>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <label style={{ fontWeight: 'bold', fontSize: '14px' }}>
+              {dict.language}:
+            </label>
+            <select 
+              value={language} 
+              onChange={(e) => setLanguage(e.target.value as Language)}
+              style={{ padding: '5px', fontSize: '14px' }}
+            >
+              {Object.keys(dictionaries).map((lang) => (
+                <option key={lang} value={lang}>
+                  {lang === 'en' ? 'English' : lang === 'pt-BR' ? 'Português (Brasil)' : lang}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
         {/* Basic Info Form */}
@@ -213,52 +219,6 @@ export default function MonsterCardMaker({
             dict={dict} 
           />
         )}
-
-        {/* Action buttons */}
-        <div style={{ marginTop: '30px', display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-          <button 
-            onClick={exportPng}
-            style={{ 
-              padding: '10px 15px', 
-              backgroundColor: '#007bff', 
-              color: 'white', 
-              border: 'none', 
-              borderRadius: '4px', 
-              cursor: 'pointer',
-              fontSize: '14px'
-            }}
-          >
-            {dict.exportPng}
-          </button>
-          <button 
-            onClick={copyPng}
-            style={{ 
-              padding: '10px 15px', 
-              backgroundColor: '#28a745', 
-              color: 'white', 
-              border: 'none', 
-              borderRadius: '4px', 
-              cursor: 'pointer',
-              fontSize: '14px'
-            }}
-          >
-            {dict.copyPng}
-          </button>
-          <button 
-            onClick={resetForm}
-            style={{ 
-              padding: '10px 15px', 
-              backgroundColor: '#dc3545', 
-              color: 'white', 
-              border: 'none', 
-              borderRadius: '4px', 
-              cursor: 'pointer',
-              fontSize: '14px'
-            }}
-          >
-            {dict.reset}
-          </button>
-        </div>
       </div>
 
       {/* Right side - Preview */}
@@ -275,6 +235,130 @@ export default function MonsterCardMaker({
         <h2 style={{ marginTop: 0, marginBottom: '20px', color: '#333' }}>{dict.preview}</h2>
         <div id='monster-card-preview' style={{ transform: 'scale(1)', transformOrigin: 'top center' }}>
           <MonsterCard monster={monster} dict={dict} />
+        </div>
+
+        {/* Action buttons */}
+        <div style={{ marginTop: '30px', display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center' }}>
+          <button 
+            onClick={exportPng}
+            title="Export PNG"
+            style={{ 
+              padding: '12px', 
+              backgroundColor: '#8B4513', 
+              color: 'white', 
+              border: '2px solid #654321', 
+              borderRadius: '50%', 
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+              background: 'linear-gradient(135deg, #8B4513 0%, #A0522D 100%)',
+              width: '48px',
+              height: '48px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#A0522D';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.15)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = '#8B4513';
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+            }}
+            onMouseDown={(e) => {
+              e.currentTarget.style.transform = 'translateY(1px)';
+              e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.2)';
+            }}
+            onMouseUp={(e) => {
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.15)';
+            }}
+          >
+            <img src="/download.svg" alt="Download" style={{ width: '24px', height: '24px', filter: 'brightness(0) invert(1)' }} />
+          </button>
+          <button 
+            onClick={copyPng}
+            title="Copy PNG to clipboard"
+            style={{ 
+              padding: '12px', 
+              backgroundColor: '#556B2F', 
+              color: 'white', 
+              border: '2px solid #3E4B21', 
+              borderRadius: '50%', 
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+              background: 'linear-gradient(135deg, #556B2F 0%, #6B8E23 100%)',
+              width: '48px',
+              height: '48px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#6B8E23';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.15)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = '#556B2F';
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+            }}
+            onMouseDown={(e) => {
+              e.currentTarget.style.transform = 'translateY(1px)';
+              e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.2)';
+            }}
+            onMouseUp={(e) => {
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.15)';
+            }}
+          >
+            <img src="/clipboard.svg" alt="Copy" style={{ width: '24px', height: '24px', filter: 'brightness(0) invert(1)' }} />
+          </button>
+          <button 
+            onClick={resetForm}
+            title="Reset form"
+            style={{ 
+              padding: '12px', 
+              backgroundColor: '#B22222', 
+              color: 'white', 
+              border: '2px solid #8B1A1A', 
+              borderRadius: '50%', 
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+              background: 'linear-gradient(135deg, #B22222 0%, #DC143C 100%)',
+              width: '48px',
+              height: '48px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#DC143C';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.15)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = '#B22222';
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+            }}
+            onMouseDown={(e) => {
+              e.currentTarget.style.transform = 'translateY(1px)';
+              e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.2)';
+            }}
+            onMouseUp={(e) => {
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.15)';
+            }}
+          >
+            <img src="/reset.svg" alt="Reset" style={{ width: '24px', height: '24px', filter: 'brightness(0) invert(1)' }} />
+          </button>
         </div>
       </div>
     </div>
