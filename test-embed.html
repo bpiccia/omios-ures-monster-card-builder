@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Omios Uries Monster Card Maker Embed</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <script src="https://omios-ures-monster-card-builder.vercel.app/omios-uries-card-maker.js"></script>
+    
+    <style>
+        /* Placeholder for your card and form styles */
+        body { margin: 0; font-family: Arial, sans-serif; background-color: #f0f0f0; }
+        
+        /* Styles needed by the card component */
+        #monster-card-container { display: flex; justify-content: center; padding: 20px; }
+        
+        /* Your JS code uses these classes, they must be defined in your actual CSS! */
+        .monster-title { font-size: 24px; font-weight: bold; margin-bottom: 5px; }
+        .monster-size-type { font-size: 14px; font-style: italic; margin-bottom: 10px; }
+        .linebreak-container img { width: 100%; height: auto; }
+        /* Add all other custom styles (stats, abilities, tailwind classes, etc.) here or in styles.css */
+    </style>
+</head>
+<body>
+
+    <div id="monster-card-container">
+        </div>
+
+    <script>
+        // 4. Initialize the Embed on Document Load
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // Check if the script loaded correctly by checking the global variable
+            if (typeof OmiosUriesCardMaker !== 'undefined' && OmiosUriesCardMaker.initEmbeddable) {
+                console.log('✅ OmiosUriesCardMaker module loaded successfully.');
+
+                // The function signature is: initEmbeddable(elementId, options)
+                OmiosUriesCardMaker.initEmbeddable('monster-card-container', {
+                    initialLang: 'en' // Or 'pt-BR'
+                });
+                
+                console.log('🚀 Card Maker initialized in element #monster-card-container.');
+            } else {
+                console.error('❌ OmiosUriesCardMaker module is undefined. Check script loading order and paths.');
+            }
+        });
+    </script>
+</body>
+</html>

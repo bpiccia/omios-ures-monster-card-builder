@@ -4,7 +4,12 @@ import react from '@vitejs/plugin-react'
 // https://vitejs.dev/config/ - Embeddable library build
 export default defineConfig({
   plugins: [react()],
+  publicDir: false, // Don't copy public files
+  define: {
+    'process.env.NODE_ENV': '"production"'
+  },
   build: {
+    emptyOutDir: false, // Don't clear the dist folder
     lib: {
       entry: 'src/index-embed.ts',
       name: 'OmiosUriesCardMaker',

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Embedded Monster Card Maker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .warning { background: #fff3cd; color: #856404; }
+        .debug {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        #container {
+            border: 2px dashed #ccc;
+            padding: 20px;
+            margin: 20px 0;
+            min-height: 200px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🐛 Debug Embedded Monster Card Maker</h1>
+    
+    <div id="status"></div>
+    
+    <button onclick="testLoad()">Test Load Library</button>
+    <button onclick="showDebugInfo()">Show Debug Info</button>
+    <button onclick="testInit()">Test Init</button>
+    
+    <div id="debug-output" class="debug"></div>
+    
+    <div id="container">
+        <p>Monster Card Maker will load here...</p>
+    </div>
+
+    <!-- Load React and ReactDOM from CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Load the Monster Card Maker -->
+    <script src="https://omios-ures-monster-card-builder.vercel.app/omios-uries-card-maker.js"></script>
+    
+    <script>
+        function updateStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+        
+        function debug(message) {
+            const debugDiv = document.getElementById('debug-output');
+            debugDiv.textContent += new Date().toLocaleTimeString() + ': ' + message + '\n';
+            console.log(message);
+        }
+        
+        function testLoad() {
+            debug('=== Testing Library Load ===');
+            debug('React available: ' + (typeof React !== 'undefined'));
+            debug('ReactDOM available: ' + (typeof ReactDOM !== 'undefined'));
+            debug('OmiosUriesCardMaker available: ' + (typeof window.OmiosUriesCardMaker !== 'undefined'));
+            
+            if (window.OmiosUriesCardMaker) {
+                debug('OmiosUriesCardMaker object: ' + JSON.stringify(Object.keys(window.OmiosUriesCardMaker)));
+                debug('Has init method: ' + (typeof window.OmiosUriesCardMaker.init === 'function'));
+                debug('Has initEmbeddable method: ' + (typeof window.OmiosUriesCardMaker.initEmbeddable === 'function'));
+            } else {
+                debug('OmiosUriesCardMaker is: ' + window.OmiosUriesCardMaker);
+            }
+        }
+        
+        function showDebugInfo() {
+            debug('=== Global Variables ===');
+            debug('window.React: ' + typeof window.React);
+            debug('window.ReactDOM: ' + typeof window.ReactDOM);
+            debug('window.OmiosUriesCardMaker: ' + typeof window.OmiosUriesCardMaker);
+            
+            debug('=== All window properties containing "React" or "Omios" ===');
+            Object.keys(window).filter(key => 
+                key.toLowerCase().includes('react') || 
+                key.toLowerCase().includes('omios')
+            ).forEach(key => {
+                debug(key + ': ' + typeof window[key]);
+            });
+        }
+        
+        function testInit() {
+            debug('=== Testing Init ===');
+            
+            if (window.OmiosUriesCardMaker && window.OmiosUriesCardMaker.init) {
+                try {
+                    debug('Calling init...');
+                    window.OmiosUriesCardMaker.init('container', { initialLang: 'en' });
+                    debug('Init successful!');
+                    updateStatus('✅ Monster Card Maker initialized successfully!', 'success');
+                } catch (error) {
+                    debug('Init error: ' + error.message);
+                    debug('Error stack: ' + error.stack);
+                    updateStatus('❌ Init failed: ' + error.message, 'error');
+                }
+            } else {
+                debug('Cannot init - library not loaded properly');
+                updateStatus('❌ Library not loaded', 'error');
+            }
+        }
+        
+        // Auto-test on load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                debug('=== Page Load Complete ===');
+                testLoad();
+            }, 500);
+        });
+        
+        // Test immediately
+        setTimeout(() => {
+            debug('=== Immediate Test ===');
+            testLoad();
+        }, 100);
+    </script>
+</body>
+</html>
