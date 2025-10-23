@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react'
 // https://vitejs.dev/config/ - Embeddable library build
 export default defineConfig({
   plugins: [react()],
-  publicDir: false, // Don't copy public files
+  publicDir: 'public', // Include public files for assets
   define: {
     'process.env.NODE_ENV': '"production"'
   },

@@ -1,4 +1,7 @@
 import { initEmbeddable } from './MonsterCardMaker';
+// Import CSS and fonts for embedded version
+import './index.css';
+import './fonts.css';
 
 // Export the embeddable init function for library builds
 export { initEmbeddable };
