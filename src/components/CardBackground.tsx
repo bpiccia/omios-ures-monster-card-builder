@@ -1,3 +1,5 @@
+import { getAssetUrl } from '../constants';
+
 interface CardBackgroundProps {
   readonly middleImagesNeeded: number;
 }
@@ -9,7 +11,7 @@ export function CardBackground({ middleImagesNeeded }: CardBackgroundProps) {
     <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1, display: 'flex', flexDirection: 'column'}}>
       {/* Top image - natural aspect ratio at full width */}
       <img 
-        src="/top.png" 
+        src={getAssetUrl("/top.png")} 
         alt="" 
         style={{ 
           width: '100%', 
@@ -24,7 +26,7 @@ export function CardBackground({ middleImagesNeeded }: CardBackgroundProps) {
       {Array.from({ length: middleImagesNeeded }, (_, index) => (
         <img 
           key={index}
-          src="/middle.png" 
+          src={getAssetUrl("/middle.png")} 
           alt="" 
           style={{ 
             width: '100%', 
@@ -38,7 +40,7 @@ export function CardBackground({ middleImagesNeeded }: CardBackgroundProps) {
       
       {/* Bottom image - natural aspect ratio at full width */}
       <img 
-        src="/bottom.png" 
+        src={getAssetUrl("/bottom.png")} 
         alt="" 
         style={{ 
           width: '100%', 

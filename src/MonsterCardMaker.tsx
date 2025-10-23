@@ -2,7 +2,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { toPng } from 'html-to-image';
 import { Language } from './types';
-import { dictionaries } from './constants';
+import { dictionaries, getAssetUrl } from './constants';
 import { useMonster } from './hooks/useMonster';
 import { MonsterCard } from './components/MonsterCard';
 import { BasicInfoForm } from './components/BasicInfoForm';
@@ -277,7 +277,7 @@ export default function MonsterCardMaker({
               e.currentTarget.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.15)';
             }}
           >
-            <img src="/download.svg" alt="Download" style={{ width: '24px', height: '24px', filter: 'brightness(0) invert(1)' }} />
+            <img src={getAssetUrl("/download.svg")} alt="Download" style={{ width: '24px', height: '24px', filter: 'brightness(0) invert(1)' }} />
           </button>
           <button 
             onClick={copyPng}
@@ -317,7 +317,7 @@ export default function MonsterCardMaker({
               e.currentTarget.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.15)';
             }}
           >
-            <img src="/clipboard.svg" alt="Copy" style={{ width: '24px', height: '24px', filter: 'brightness(0) invert(1)' }} />
+            <img src={getAssetUrl("/clipboard.svg")} alt="Copy" style={{ width: '24px', height: '24px', filter: 'brightness(0) invert(1)' }} />
           </button>
           <button 
             onClick={resetForm}
@@ -357,7 +357,7 @@ export default function MonsterCardMaker({
               e.currentTarget.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.15)';
             }}
           >
-            <img src="/reset.svg" alt="Reset" style={{ width: '24px', height: '24px', filter: 'brightness(0) invert(1)' }} />
+            <img src={getAssetUrl("/reset.svg")} alt="Reset" style={{ width: '24px', height: '24px', filter: 'brightness(0) invert(1)' }} />
           </button>
         </div>
       </div>

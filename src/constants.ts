@@ -1,5 +1,18 @@
 import { Language, Dictionary, Monster } from './types';
 
+// Asset URL helper for embedded usage
+export const getAssetUrl = (path: string): string => {
+  // Check if we're in an embedded environment (different domain than the app)
+  const isEmbedded = window.location.hostname !== 'omios-ures-monster-card-builder.vercel.app' && 
+                     window.location.hostname !== 'localhost';
+  
+  if (isEmbedded) {
+    return `https://omios-ures-monster-card-builder.vercel.app${path}`;
+  }
+  
+  return path;
+};
+
 export const dictionaries: Record<Language, Dictionary> = {
   "en": {
     title: "Monster Card Maker",

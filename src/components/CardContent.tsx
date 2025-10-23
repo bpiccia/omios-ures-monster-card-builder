@@ -1,5 +1,6 @@
 import React from 'react';
-import { Monster, Dictionary } from '../types';
+import { Dictionary, Monster } from '../types';
+import { getAssetUrl } from '../constants';
 import './CardContent.css';
 
 interface CardContentProps {
@@ -47,7 +48,7 @@ export function CardContent({
         <div className="monster-size-type">{monster.sizeType || 'Size / Type'}</div>
         
         <div className="linebreak-container linebreak-small">
-          <img src="/linebreak.png" alt="" className="linebreak-image" />
+          <img src={getAssetUrl("/linebreak.png")} alt="" className="linebreak-image" />
         </div>
         
         {/* Stats block */}
@@ -59,7 +60,7 @@ export function CardContent({
         </div>
         
         <div className="linebreak-container">
-          <img src="/linebreak.png" alt="" className="linebreak-image" />
+          <img src={getAssetUrl("/linebreak.png")} alt="" className="linebreak-image" />
         </div>
         
         {/* Attributes */}
@@ -81,7 +82,7 @@ export function CardContent({
         {/* Dynamic content separator */}
         {(hasAbilities || hasSpecialAttacks || hasSpells) && (
           <div className="linebreak-container">
-            <img src="/linebreak.png" alt="" className="linebreak-image" />
+            <img src={getAssetUrl("/linebreak.png")} alt="" className="linebreak-image" />
           </div>
         )}
 
@@ -105,7 +106,7 @@ export function CardContent({
           <>
             {hasAbilities && (
               <div className="linebreak-container linebreak-large">
-                <img src="/linebreak.png" alt="" className="linebreak-image" />
+                <img src={getAssetUrl("/linebreak.png")} alt="" className="linebreak-image" />
               </div>
             )}
             <h3 className="section-header">{dict.cardHeaders.specialAttacks}</h3>
@@ -125,7 +126,7 @@ export function CardContent({
           <>
             {(hasAbilities || hasSpecialAttacks) && (
               <div className="linebreak-container linebreak-large">
-                <img src="/linebreak.png" alt="" className="linebreak-image" />
+                <img src={getAssetUrl("/linebreak.png")} alt="" className="linebreak-image" />
               </div>
             )}
             <h3 className="section-header">{dict.cardHeaders.spells}</h3>
