@@ -69,7 +69,7 @@ export function CardContent({
 				<div className="stats-container">
 					<div className="stat-row">
 						<span className="stat-label">{dict.hp}:</span>{" "}
-						<span className="stat-value">{monster.hp || "0"}</span>
+						<span className="stat-value">{monster.hp || "6"}</span>
 					</div>
 					<div className="stat-row">
 						<span className="stat-label">{dict.defense}:</span>{" "}
