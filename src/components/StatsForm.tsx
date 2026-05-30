@@ -9,10 +9,10 @@ interface StatsFormProps {
 export function StatsForm({ monster, updateMonster, dict }: StatsFormProps) {
   return (
     <div>
-      <h3 className="text-lg font-medium text-gray-800 mb-3">{dict.stats}</h3>
+      <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200 mb-3 transition-colors">{dict.stats}</h3>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div>
-          <label htmlFor="hp" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="hp" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             {dict.hp}
           </label>
           <input
@@ -20,11 +20,11 @@ export function StatsForm({ monster, updateMonster, dict }: StatsFormProps) {
             type="number"
             value={monster.hp}
             onChange={(e) => updateMonster({ hp: e.target.value ? parseInt(e.target.value) : "" })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
           />
         </div>
         <div>
-          <label htmlFor="defense" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="defense" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             {dict.defense}
           </label>
           <input
@@ -32,11 +32,11 @@ export function StatsForm({ monster, updateMonster, dict }: StatsFormProps) {
             type="number"
             value={monster.defense}
             onChange={(e) => updateMonster({ defense: e.target.value ? parseInt(e.target.value) : "" })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
           />
         </div>
         <div>
-          <label htmlFor="speed" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="speed" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             {dict.speed}
           </label>
           <input
@@ -44,11 +44,11 @@ export function StatsForm({ monster, updateMonster, dict }: StatsFormProps) {
             type="number"
             value={monster.speed}
             onChange={(e) => updateMonster({ speed: e.target.value ? parseInt(e.target.value) : "" })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
           />
         </div>
         <div>
-          <label htmlFor="damage" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="damage" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             {dict.damage}
           </label>
           <input
@@ -57,7 +57,7 @@ export function StatsForm({ monster, updateMonster, dict }: StatsFormProps) {
             value={monster.damage}
             onChange={(e) => updateMonster({ damage: e.target.value })}
             placeholder="1d6"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
           />
         </div>
       </div>

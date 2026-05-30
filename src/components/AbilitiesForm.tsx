@@ -8,25 +8,25 @@ interface AbilitiesFormProps {
   readonly dict: Dictionary;
 }
 
-export function AbilitiesForm({ 
-  monster, 
-  addAbility, 
-  removeAbility, 
-  updateAbility, 
-  dict 
+export function AbilitiesForm({
+  monster,
+  addAbility,
+  removeAbility,
+  updateAbility,
+  dict
 }: AbilitiesFormProps) {
   return (
     <div>
       <div className="space-y-3">
         {monster.abilities.map((ability) => (
-            <div key={ability.id} className="grid grid-cols-1 gap-2 p-3 bg-gray-50 rounded-md">
+            <div key={ability.id} className="grid grid-cols-1 gap-2 p-3 bg-gray-50 dark:bg-gray-700 rounded-md transition-colors">
               <div className="flex gap-2">
                 <input
                   type="text"
                   value={ability.name}
                   onChange={(e) => updateAbility(ability.id, { name: e.target.value })}
                   placeholder={dict.abilityName}
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                  className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-600 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm transition-colors"
                 />
                 <button
                   onClick={() => removeAbility(ability.id)}
@@ -40,7 +40,7 @@ export function AbilitiesForm({
                 onChange={(e) => updateAbility(ability.id, { desc: e.target.value })}
                 placeholder={dict.abilityDesc}
                 rows={2}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-600 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm transition-colors"
               />
             </div>
           ))}

@@ -10,7 +10,7 @@ export function BasicInfoForm({ monster, updateMonster, dict }: BasicInfoFormPro
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4" >
       <div>
-        <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
           {dict.name}
         </label>
         <input
@@ -18,11 +18,11 @@ export function BasicInfoForm({ monster, updateMonster, dict }: BasicInfoFormPro
           type="text"
           value={monster.name}
           onChange={(e) => updateMonster({ name: e.target.value })}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
         />
       </div>
       <div>
-        <label htmlFor="sizeType" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="sizeType" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
           {dict.sizeType}
         </label>
         <input
@@ -30,7 +30,7 @@ export function BasicInfoForm({ monster, updateMonster, dict }: BasicInfoFormPro
           type="text"
           value={monster.sizeType}
           onChange={(e) => updateMonster({ sizeType: e.target.value })}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
         />
       </div>
     </div>

@@ -2,3 +2,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+html, body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+  background-color: #ffffff;
+  margin: 0;
+}
+
+html.dark, html.dark body {
+  background-color: #0a0a0a;
+  color-scheme: dark;
+}
