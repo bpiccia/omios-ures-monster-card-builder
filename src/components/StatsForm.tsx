@@ -19,7 +19,7 @@ export function StatsForm({ monster, updateMonster, dict }: StatsFormProps) {
             id="hp"
             type="number"
             value={monster.hp}
-            onChange={(e) => updateMonster({ hp: e.target.value ? parseInt(e.target.value) : "" })}
+            onChange={(e) => updateMonster({ hp: e.target.value !== "" ? parseInt(e.target.value) : "" })}
             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
           />
         </div>
@@ -31,7 +31,7 @@ export function StatsForm({ monster, updateMonster, dict }: StatsFormProps) {
             id="defense"
             type="number"
             value={monster.defense}
-            onChange={(e) => updateMonster({ defense: e.target.value ? parseInt(e.target.value) : "" })}
+            onChange={(e) => updateMonster({ defense: e.target.value !== "" ? parseInt(e.target.value) : "" })}
             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
           />
         </div>
@@ -43,7 +43,7 @@ export function StatsForm({ monster, updateMonster, dict }: StatsFormProps) {
             id="speed"
             type="number"
             value={monster.speed}
-            onChange={(e) => updateMonster({ speed: e.target.value ? parseInt(e.target.value) : "" })}
+            onChange={(e) => updateMonster({ speed: e.target.value !== "" ? parseInt(e.target.value) : "" })}
             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
           />
         </div>

@@ -69,19 +69,19 @@ export function CardContent({
 				<div className="stats-container">
 					<div className="stat-row">
 						<span className="stat-label">{dict.hp}:</span>{" "}
-						<span className="stat-value">{monster.hp || "6"}</span>
+						<span className="stat-value">{monster.hp !== "" ? monster.hp : "6"}</span>
 					</div>
 					<div className="stat-row">
 						<span className="stat-label">{dict.defense}:</span>{" "}
-						<span className="stat-value">{monster.defense || "6"}</span>
+						<span className="stat-value">{monster.defense !== "" ? monster.defense : "6"}</span>
 					</div>
 					<div className="stat-row">
 						<span className="stat-label">{dict.speed}:</span>{" "}
-						<span className="stat-value">{monster.speed || "6"}</span>
+						<span className="stat-value">{monster.speed !== "" ? monster.speed : "6"}</span>
 					</div>
 					<div className="stat-row">
 						<span className="stat-label">{dict.damage}:</span>{" "}
-						<span className="stat-value">{monster.damage || "1d6"}</span>
+						<span className="stat-value">{monster.damage !== "" ? monster.damage : "1d6"}</span>
 					</div>
 				</div>
 
@@ -97,15 +97,15 @@ export function CardContent({
 				<div className="attributes-container">
 					<div className="attribute-item">
 						<div className="attribute-label">{dict.body}</div>
-						<div className="attribute-value">{monster.body || "0"}</div>
+						<div className="attribute-value">{monster.body !== "" ? monster.body : "0"}</div>
 					</div>
 					<div className="attribute-item">
 						<div className="attribute-label">{dict.mind}</div>
-						<div className="attribute-value">{monster.mind || "0"}</div>
+						<div className="attribute-value">{monster.mind !== "" ? monster.mind : "0"}</div>
 					</div>
 					<div className="attribute-item">
 						<div className="attribute-label">{dict.magic}</div>
-						<div className="attribute-value">{monster.magic || "0"}</div>
+						<div className="attribute-value">{monster.magic !== "" ? monster.magic : "0"}</div>
 					</div>
 				</div>
 
