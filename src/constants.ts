@@ -51,7 +51,22 @@ export const dictionaries: Record<Language, Dictionary> = {
       abilities: "Abilities",
       specialAttacks: "Special Attacks",
       spells: "Spells"
-    }
+    },
+    library: "Library",
+    saveMonster: "Save",
+    deleteMonster: "Delete",
+    duplicateMonster: "Duplicate",
+    exportJson: "Export JSON",
+    importJson: "Import Monster",
+    exportAll: "Export All",
+    importAll: "Import All",
+    clearAll: "Clear All",
+    confirmClear: "Are you sure you want to clear the entire library?",
+    confirmDelete: "Are you sure you want to delete this monster?",
+    duplicatePrompt: "Enter a name for the duplicated monster:",
+    emptyLibrary: "No saved monsters yet",
+    monsterSaved: "Monster saved!",
+    noName: "Unnamed Monster"
   },
   "pt-BR": {
     title: "Criador de Cartas de Monstro",
@@ -90,7 +105,22 @@ export const dictionaries: Record<Language, Dictionary> = {
       abilities: "Habilidades",
       specialAttacks: "Ataques Especiais",
       spells: "Magias"
-    }
+    },
+    library: "Biblioteca",
+    saveMonster: "Salvar",
+    deleteMonster: "Excluir",
+    duplicateMonster: "Duplicar",
+    exportJson: "Exportar JSON",
+    importJson: "Importar JSON",
+    exportAll: "Exportar Todos",
+    importAll: "Importar Todos",
+    clearAll: "Limpar Tudo",
+    confirmClear: "Tem certeza que deseja limpar toda a biblioteca?",
+    confirmDelete: "Tem certeza que deseja excluir este monstro?",
+    duplicatePrompt: "Digite um nome para o monstro duplicado:",
+    emptyLibrary: "Nenhum monstro salvo ainda",
+    monsterSaved: "Monstro salvo!",
+    noName: "Monstro Sem Nome"
   }
 } as const;
 

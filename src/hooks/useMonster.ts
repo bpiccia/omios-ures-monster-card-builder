@@ -1,25 +1,24 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Monster, Ability, SpecialAttack, Spell } from '../types';
 import { defaultMonster } from '../constants';
 
 export function useMonster() {
-  const [monster, setMonster] = useState<Monster>(defaultMonster);
-
-  // Load from localStorage on mount
-  useEffect(() => {
+  const [monster, setMonster] = useState<Monster>(() => {
     try {
       const saved = localStorage.getItem('ou_monster');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        setMonster(parsed);
-      }
-    } catch (error) {
-      console.warn('Failed to load monster from localStorage:', error);
+      return saved ? JSON.parse(saved) : defaultMonster;
+    } catch {
+      return defaultMonster;
     }
-  }, []);
+  });
 
-  // Save to localStorage on monster change
+  const isInitialMount = useRef(true);
+
   useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
     try {
       localStorage.setItem('ou_monster', JSON.stringify(monster));
     } catch (error) {
@@ -94,6 +93,10 @@ export function useMonster() {
     });
   }, [monster.spells, updateMonster]);
 
+  const loadMonster = useCallback((data: Monster) => {
+    setMonster(data);
+  }, []);
+
   const resetForm = useCallback(() => {
     setMonster(defaultMonster);
     localStorage.removeItem('ou_monster');
@@ -102,6 +105,7 @@ export function useMonster() {
   return {
     monster,
     updateMonster,
+    loadMonster,
     addAbility,
     removeAbility,
     updateAbility,

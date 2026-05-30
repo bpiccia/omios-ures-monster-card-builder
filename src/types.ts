@@ -36,6 +36,11 @@ export interface Monster {
   hasSpells: boolean;
 }
 
+export interface SavedMonster extends Monster {
+  savedId: string;
+  savedAt: number;
+}
+
 export interface Dictionary {
   title: string;
   preview: string;
@@ -74,4 +79,19 @@ export interface Dictionary {
     specialAttacks: string;
     spells: string;
   };
+  library: string;
+  saveMonster: string;
+  deleteMonster: string;
+  duplicateMonster: string;
+  exportJson: string;
+  importJson: string;
+  exportAll: string;
+  importAll: string;
+  clearAll: string;
+  confirmClear: string;
+  confirmDelete: string;
+  duplicatePrompt: string;
+  emptyLibrary: string;
+  monsterSaved: string;
+  noName: string;
 }

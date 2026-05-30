@@ -4,7 +4,9 @@ import { toPng } from 'html-to-image';
 import { Language } from './types';
 import { dictionaries, getAssetUrl } from './constants';
 import { useMonster } from './hooks/useMonster';
+import { useMonsterLibrary } from './hooks/useMonsterLibrary';
 import { MonsterCard } from './components/MonsterCard';
+import { MonsterLibrary } from './components/MonsterLibrary';
 import { BasicInfoForm } from './components/BasicInfoForm';
 import { StatsForm } from './components/StatsForm';
 import { AttributesForm } from './components/AttributesForm';
@@ -33,6 +35,37 @@ function useDarkMode() {
   return [darkMode, () => setDarkMode(prev => !prev)] as const;
 }
 
+function useFileImport(onImport: (content: string) => boolean) {
+  const inputRef = React.useRef<HTMLInputElement>(null);
+
+  const trigger = React.useCallback(() => {
+    inputRef.current?.click();
+  }, []);
+
+  const handleChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === 'string') {
+        onImport(reader.result);
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  }, [onImport]);
+
+  const input = React.createElement('input', {
+    ref: inputRef,
+    type: 'file',
+    accept: '.json',
+    style: { display: 'none' },
+    onChange: handleChange,
+  });
+
+  return { trigger, input };
+}
+
 interface MonsterCardMakerProps {
   initialLang?: Language;
 }
@@ -42,6 +75,21 @@ export default function MonsterCardMaker({
 }: Readonly<MonsterCardMakerProps>) {
   const [language, setLanguage] = React.useState<Language>(initialLang);
   const [darkMode, toggleDarkMode] = useDarkMode();
+  const [currentMonsterId, setCurrentMonsterId] = React.useState<string | null>(() => {
+    try {
+      return localStorage.getItem('ou_current_monster_id') || null;
+    } catch {
+      return null;
+    }
+  });
+
+  React.useEffect(() => {
+    if (currentMonsterId) {
+      localStorage.setItem('ou_current_monster_id', currentMonsterId);
+    } else {
+      localStorage.removeItem('ou_current_monster_id');
+    }
+  }, [currentMonsterId]);
   const {
     monster,
     updateMonster,
@@ -54,10 +102,89 @@ export default function MonsterCardMaker({
     addSpell,
     removeSpell,
     updateSpell,
-    resetForm
+    resetForm,
+    loadMonster,
   } = useMonster();
 
+  const {
+    library,
+    saveMonster: saveToLibrary,
+    deleteMonster: deleteFromLibrary,
+    duplicateMonster: duplicateInLibrary,
+    getMonster: getFromLibrary,
+    exportMonster: exportFromLibrary,
+    exportAll,
+    importMonster: importToLibrary,
+    importAll: importAllToLibrary,
+    clearAll,
+  } = useMonsterLibrary();
+
   const dict = dictionaries[language];
+
+  const importOneFile = useFileImport(importToLibrary);
+  const importAllFile = useFileImport(importAllToLibrary);
+
+  // Auto-save: track refs to avoid stale closures in the effect
+  const currentMonsterIdRef = React.useRef(currentMonsterId);
+  currentMonsterIdRef.current = currentMonsterId;
+  const skipNextSave = React.useRef(true); // skip initial mount
+  const isMonsterEmpty = (m: typeof monster) =>
+    !m.name && !m.sizeType && m.hp === "" && m.defense === "" &&
+    m.speed === "" && !m.damage && m.body === "" && m.mind === "" &&
+    m.magic === "" && m.abilities.length === 0 &&
+    m.specialAttacks.length === 0 && m.spells.length === 0;
+
+  React.useEffect(() => {
+    if (skipNextSave.current) {
+      skipNextSave.current = false;
+      return;
+    }
+    if (isMonsterEmpty(monster)) return;
+
+    const id = saveToLibrary(monster, currentMonsterIdRef.current ?? undefined);
+    if (!currentMonsterIdRef.current) {
+      setCurrentMonsterId(id);
+    }
+  }, [monster, saveToLibrary]);
+
+  const handleLoadMonster = React.useCallback((id: string) => {
+    const m = getFromLibrary(id);
+    if (m) {
+      skipNextSave.current = true;
+      loadMonster(m);
+      setCurrentMonsterId(id);
+    }
+  }, [getFromLibrary, loadMonster]);
+
+  const handleDeleteMonster = React.useCallback((id: string) => {
+    if (!window.confirm(dict.confirmDelete)) return;
+    deleteFromLibrary(id);
+    if (currentMonsterId === id) {
+      setCurrentMonsterId(null);
+    }
+  }, [deleteFromLibrary, currentMonsterId, dict.confirmDelete]);
+
+  const handleDuplicateMonster = React.useCallback((id: string) => {
+    const original = library.find(m => m.savedId === id);
+    const defaultName = original?.name ? `${original.name} (copy)` : '';
+    const name = window.prompt(dict.duplicatePrompt, defaultName);
+    if (name === null) return;
+    duplicateInLibrary(id, name);
+  }, [duplicateInLibrary, library, dict.duplicatePrompt]);
+
+  const handleClearAll = React.useCallback(() => {
+    if (!window.confirm(dict.confirmClear)) return;
+    clearAll();
+    setCurrentMonsterId(null);
+  }, [clearAll, dict.confirmClear]);
+
+  const handleNewMonster = React.useCallback(() => {
+    skipNextSave.current = true;
+    resetForm();
+    setCurrentMonsterId(null);
+  }, [resetForm]);
+
+  const handleReset = handleNewMonster;
 
   const exportPng = async (): Promise<void> => {
     const element = document.getElementById('monster-card-preview');
@@ -87,11 +214,9 @@ export default function MonsterCardMaker({
         pixelRatio: 2
       });
 
-      // Convert data URL to blob
       const response = await fetch(dataUrl);
       const blob = await response.blob();
 
-      // Copy to clipboard
       await navigator.clipboard.write([
         new ClipboardItem({ 'image/png': blob })
       ]);
@@ -101,8 +226,27 @@ export default function MonsterCardMaker({
   };
 
   return (
-    <div className="flex gap-5 p-5 font-sans transition-colors duration-300">
-      {/* Left side - Form */}
+    <div className="flex gap-3 p-5 font-sans transition-colors duration-300">
+      {importOneFile.input}
+      {importAllFile.input}
+
+      {/* Left side - Monster Library */}
+      <MonsterLibrary
+        library={library}
+        currentMonsterId={currentMonsterId}
+        dict={dict}
+        onLoad={handleLoadMonster}
+        onDelete={handleDeleteMonster}
+        onDuplicate={handleDuplicateMonster}
+        onExportOne={exportFromLibrary}
+        onImportOne={importOneFile.trigger}
+        onExportAll={exportAll}
+        onImportAll={importAllFile.trigger}
+        onClearAll={handleClearAll}
+        onNewMonster={handleNewMonster}
+      />
+
+      {/* Middle - Form */}
       <div className="flex-1 min-w-[350px] max-w-[500px] bg-[#f5f5f5] dark:bg-gray-800 p-5 rounded-lg max-h-[90vh] overflow-y-auto transition-colors duration-300">
         {/* Header with title, dark mode toggle, and language selector */}
         <div className="flex justify-between items-center mb-5">
@@ -270,129 +414,95 @@ export default function MonsterCardMaker({
 
         {/* Action buttons */}
         <div style={{ marginTop: '30px', display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center' }}>
-          <button
+          {/* Export PNG */}
+          <RoundButton
             onClick={exportPng}
             title="Export PNG"
-            style={{
-              padding: '12px',
-              backgroundColor: '#8B4513',
-              color: 'white',
-              border: '2px solid #654321',
-              borderRadius: '50%',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease',
-              boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-              background: 'linear-gradient(135deg, #8B4513 0%, #A0522D 100%)',
-              width: '48px',
-              height: '48px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#A0522D';
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.15)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = '#8B4513';
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
-            }}
-            onMouseDown={(e) => {
-              e.currentTarget.style.transform = 'translateY(1px)';
-              e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.2)';
-            }}
-            onMouseUp={(e) => {
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.15)';
-            }}
+            bgFrom="#8B4513"
+            bgTo="#A0522D"
+            borderColor="#654321"
           >
             <img src={getAssetUrl("/download.svg")} alt="Download" style={{ width: '24px', height: '24px', filter: 'brightness(0) invert(1)' }} />
-          </button>
-          <button
+          </RoundButton>
+          {/* Copy PNG */}
+          <RoundButton
             onClick={copyPng}
             title="Copy PNG to clipboard"
-            style={{
-              padding: '12px',
-              backgroundColor: '#556B2F',
-              color: 'white',
-              border: '2px solid #3E4B21',
-              borderRadius: '50%',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease',
-              boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-              background: 'linear-gradient(135deg, #556B2F 0%, #6B8E23 100%)',
-              width: '48px',
-              height: '48px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#6B8E23';
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.15)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = '#556B2F';
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
-            }}
-            onMouseDown={(e) => {
-              e.currentTarget.style.transform = 'translateY(1px)';
-              e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.2)';
-            }}
-            onMouseUp={(e) => {
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.15)';
-            }}
+            bgFrom="#556B2F"
+            bgTo="#6B8E23"
+            borderColor="#3E4B21"
           >
             <img src={getAssetUrl("/clipboard.svg")} alt="Copy" style={{ width: '24px', height: '24px', filter: 'brightness(0) invert(1)' }} />
-          </button>
-          <button
-            onClick={resetForm}
+          </RoundButton>
+          {/* Reset */}
+          <RoundButton
+            onClick={handleReset}
             title="Reset form"
-            style={{
-              padding: '12px',
-              backgroundColor: '#B22222',
-              color: 'white',
-              border: '2px solid #8B1A1A',
-              borderRadius: '50%',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease',
-              boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-              background: 'linear-gradient(135deg, #B22222 0%, #DC143C 100%)',
-              width: '48px',
-              height: '48px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#DC143C';
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.15)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = '#B22222';
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
-            }}
-            onMouseDown={(e) => {
-              e.currentTarget.style.transform = 'translateY(1px)';
-              e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.2)';
-            }}
-            onMouseUp={(e) => {
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.15)';
-            }}
+            bgFrom="#B22222"
+            bgTo="#DC143C"
+            borderColor="#8B1A1A"
           >
             <img src={getAssetUrl("/reset.svg")} alt="Reset" style={{ width: '24px', height: '24px', filter: 'brightness(0) invert(1)' }} />
-          </button>
+          </RoundButton>
         </div>
       </div>
     </div>
+  );
+}
+
+function RoundButton({
+  onClick,
+  title,
+  bgFrom,
+  bgTo,
+  borderColor,
+  children,
+}: {
+  readonly onClick: () => void;
+  readonly title: string;
+  readonly bgFrom: string;
+  readonly bgTo: string;
+  readonly borderColor: string;
+  readonly children: React.ReactNode;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      title={title}
+      style={{
+        padding: '12px',
+        color: 'white',
+        border: `2px solid ${borderColor}`,
+        borderRadius: '50%',
+        cursor: 'pointer',
+        transition: 'all 0.2s ease',
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+        background: `linear-gradient(135deg, ${bgFrom} 0%, ${bgTo} 100%)`,
+        width: '48px',
+        height: '48px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.transform = 'translateY(-2px)';
+        e.currentTarget.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.15)';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = 'translateY(0)';
+        e.currentTarget.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+      }}
+      onMouseDown={(e) => {
+        e.currentTarget.style.transform = 'translateY(1px)';
+        e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.2)';
+      }}
+      onMouseUp={(e) => {
+        e.currentTarget.style.transform = 'translateY(-2px)';
+        e.currentTarget.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.15)';
+      }}
+    >
+      {children}
+    </button>
   );
 }
 
