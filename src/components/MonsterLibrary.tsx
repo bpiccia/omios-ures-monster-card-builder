@@ -16,6 +16,22 @@ interface MonsterLibraryProps {
   readonly onNewMonster: () => void;
 }
 
+function useCollapsed() {
+  const [collapsed, setCollapsed] = React.useState(() => {
+    try {
+      return localStorage.getItem('ou_library_collapsed') === 'true';
+    } catch {
+      return false;
+    }
+  });
+
+  React.useEffect(() => {
+    localStorage.setItem('ou_library_collapsed', String(collapsed));
+  }, [collapsed]);
+
+  return [collapsed, () => setCollapsed(prev => !prev)] as const;
+}
+
 export function MonsterLibrary({
   library,
   currentMonsterId,
@@ -30,13 +46,82 @@ export function MonsterLibrary({
   onClearAll,
   onNewMonster,
 }: MonsterLibraryProps) {
+  const [collapsed, toggleCollapsed] = useCollapsed();
+
+  if (collapsed) {
+    return (
+      <div className="w-20 flex-shrink-0 bg-[#f0f0f0] dark:bg-[#1a1a2e] rounded-lg flex flex-col max-h-[90vh] transition-all duration-300">
+        {/* Header */}
+        <div className="p-2 border-b border-gray-300 dark:border-gray-700 flex flex-col items-center gap-1">
+          <button
+            onClick={toggleCollapsed}
+            title={dict.library}
+            className="p-1 rounded text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+          >
+            <ChevronRightIcon />
+          </button>
+
+          <IconOnlyButton onClick={onImportOne} title={dict.importJson}>
+            <ImportIcon />
+          </IconOnlyButton>
+          <IconOnlyButton onClick={onExportAll} title={dict.exportAll} disabled={library.length === 0}>
+            <ExportIcon />
+          </IconOnlyButton>
+          <IconOnlyButton onClick={onImportAll} title={dict.importAll}>
+            <ImportAllIcon />
+          </IconOnlyButton>
+          <IconOnlyButton onClick={onClearAll} title={dict.clearAll} variant="danger" disabled={library.length === 0}>
+            <TrashIcon />
+          </IconOnlyButton>
+        </div>
+
+        {/* Collapsed monster list */}
+        <div className="flex-1 overflow-y-auto p-1.5 space-y-1">
+          {library.map((monster) => (
+            <CollapsedMonsterItem
+              key={monster.savedId}
+              monster={monster}
+              isActive={monster.savedId === currentMonsterId}
+              dict={dict}
+              onLoad={() => onLoad(monster.savedId)}
+              onDelete={() => onDelete(monster.savedId)}
+              onDuplicate={() => onDuplicate(monster.savedId)}
+              onExport={() => onExportOne(monster.savedId)}
+            />
+          ))}
+
+          <button
+            onClick={onNewMonster}
+            title={dict.newMonster}
+            className={`w-full rounded-md text-[10px] font-medium py-1.5 text-center transition-colors border border-dashed ${
+              currentMonsterId === null
+                ? 'bg-blue-100 dark:bg-blue-900/40 border-blue-400 dark:border-blue-600 text-blue-700 dark:text-blue-300'
+                : 'bg-transparent border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800'
+            }`}
+          >
+            + new
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="w-80 flex-shrink-0 bg-[#f0f0f0] dark:bg-[#1a1a2e] rounded-lg flex flex-col max-h-[90vh] transition-colors duration-300">
+    <div className="w-80 flex-shrink-0 bg-[#f0f0f0] dark:bg-[#1a1a2e] rounded-lg flex flex-col max-h-[90vh] transition-all duration-300">
       {/* Header */}
       <div className="p-3 border-b border-gray-300 dark:border-gray-700">
-        <h3 className="text-sm font-bold text-gray-700 dark:text-gray-200 mb-2 text-center transition-colors">
-          {dict.library}
-        </h3>
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="text-sm font-bold text-gray-700 dark:text-gray-200 transition-colors">
+            {dict.library}
+          </h3>
+          <button
+            onClick={toggleCollapsed}
+            title={dict.library}
+            className="p-1 rounded text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+          >
+            <ChevronLeftIcon />
+          </button>
+        </div>
 
         {/* Global action buttons */}
         <div className="flex flex-col gap-1">
@@ -49,7 +134,7 @@ export function MonsterLibrary({
             <span>{dict.exportAll}</span>
           </HeaderButton>
           <HeaderButton onClick={onImportAll} title={dict.importAll}>
-            <ImportIcon />
+            <ImportAllIcon />
             <span>{dict.importAll}</span>
           </HeaderButton>
           <HeaderButton onClick={onClearAll} title={dict.clearAll} variant="danger" disabled={library.length === 0}>
@@ -90,6 +175,65 @@ export function MonsterLibrary({
   );
 }
 
+function CollapsedMonsterItem({
+  monster,
+  isActive,
+  dict,
+  onLoad,
+  onDelete,
+  onDuplicate,
+  onExport,
+}: {
+  readonly monster: SavedMonster;
+  readonly isActive: boolean;
+  readonly dict: Dictionary;
+  readonly onLoad: () => void;
+  readonly onDelete: () => void;
+  readonly onDuplicate: () => void;
+  readonly onExport: () => void;
+}) {
+  const [hovered, setHovered] = React.useState(false);
+  const label = (monster.name || dict.noName).slice(0, 4);
+  const displayName = monster.name || dict.noName;
+
+  return (
+    <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      className={`rounded-md transition-colors ${
+        isActive
+          ? 'bg-blue-100 dark:bg-blue-900/40 border border-blue-400 dark:border-blue-600'
+          : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
+      }`}
+    >
+      <button
+        onClick={onLoad}
+        title={displayName}
+        className={`w-full text-[11px] font-medium py-1.5 text-center transition-colors truncate ${
+          isActive
+            ? 'text-blue-700 dark:text-blue-300'
+            : 'text-gray-700 dark:text-gray-300'
+        }`}
+      >
+        {label}
+      </button>
+      {hovered && (
+        <div className="flex justify-center gap-0.5 pb-1">
+          <SmallIconButton onClick={onDuplicate} title={dict.duplicateMonster}>
+            <DuplicateIcon />
+          </SmallIconButton>
+          <SmallIconButton onClick={onExport} title={dict.exportJson}>
+            <ExportIcon />
+          </SmallIconButton>
+          <SmallIconButton onClick={onDelete} title={dict.deleteMonster} variant="danger">
+            <TrashIcon />
+          </SmallIconButton>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function MonsterItem({
   monster,
   isActive,
@@ -126,22 +270,22 @@ function MonsterItem({
           {displayName}
         </span>
         <div className="flex-shrink-0 flex items-center gap-0.5">
-          <IconButton onClick={onDuplicate} title={dict.duplicateMonster}>
+          <SmallIconButton onClick={onDuplicate} title={dict.duplicateMonster}>
             <DuplicateIcon />
-          </IconButton>
-          <IconButton onClick={onExport} title={dict.exportJson}>
+          </SmallIconButton>
+          <SmallIconButton onClick={onExport} title={dict.exportJson}>
             <ExportIcon />
-          </IconButton>
-          <IconButton onClick={onDelete} title={dict.deleteMonster} variant="danger">
+          </SmallIconButton>
+          <SmallIconButton onClick={onDelete} title={dict.deleteMonster} variant="danger">
             <TrashIcon />
-          </IconButton>
+          </SmallIconButton>
         </div>
       </div>
     </div>
   );
 }
 
-function IconButton({
+function SmallIconButton({
   onClick,
   title,
   children,
@@ -161,6 +305,35 @@ function IconButton({
       onClick={(e) => { e.stopPropagation(); onClick(); }}
       title={title}
       className={`p-1 rounded transition-colors ${classes}`}
+    >
+      {children}
+    </button>
+  );
+}
+
+function IconOnlyButton({
+  onClick,
+  title,
+  children,
+  variant = 'default',
+  disabled = false,
+}: {
+  readonly onClick: () => void;
+  readonly title: string;
+  readonly children: React.ReactNode;
+  readonly variant?: 'default' | 'danger';
+  readonly disabled?: boolean;
+}) {
+  const variantClasses = variant === 'danger'
+    ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-900/50'
+    : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600';
+
+  return (
+    <button
+      onClick={onClick}
+      title={title}
+      disabled={disabled}
+      className={`w-full flex items-center justify-center p-1.5 rounded transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${variantClasses}`}
     >
       {children}
     </button>
@@ -196,6 +369,22 @@ function HeaderButton({
   );
 }
 
+function ChevronLeftIcon() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+      <path fillRule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clipRule="evenodd"/>
+    </svg>
+  );
+}
+
+function ChevronRightIcon() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+      <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd"/>
+    </svg>
+  );
+}
+
 function ImportIcon() {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3 flex-shrink-0">
@@ -208,6 +397,14 @@ function ExportIcon() {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3 flex-shrink-0">
       <path fillRule="evenodd" d="M10 17a.75.75 0 01-.75-.75V5.612L5.29 9.77a.75.75 0 01-1.08-1.04l5.25-5.5a.75.75 0 011.08 0l5.25 5.5a.75.75 0 11-1.08 1.04l-3.96-4.158V16.25A.75.75 0 0110 17z" clipRule="evenodd"/>
+    </svg>
+  );
+}
+
+function ImportAllIcon() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3 flex-shrink-0">
+      <path fillRule="evenodd" d="M10 3a.75.75 0 01.75.75v10.638l3.96-4.158a.75.75 0 111.08 1.04l-5.25 5.5a.75.75 0 01-1.08 0l-5.25-5.5a.75.75 0 111.08-1.04l3.96 4.158V3.75A.75.75 0 0110 3z" clipRule="evenodd"/>
     </svg>
   );
 }

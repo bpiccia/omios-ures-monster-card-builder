@@ -184,8 +184,6 @@ export default function MonsterCardMaker({
     setCurrentMonsterId(null);
   }, [resetForm]);
 
-  const handleReset = handleNewMonster;
-
   const exportPng = async (): Promise<void> => {
     const element = document.getElementById('monster-card-preview');
     if (!element) return;
