@@ -52,9 +52,9 @@ export function CardContent({
 				}}
 			>
 				{/* Title and basic info */}
-				<div className="monster-title">{monster.name || "Monster Name"}</div>
+				<div className="monster-title">{monster.name || dict.defaultName}</div>
 				<div className="monster-size-type">
-					{monster.sizeType || "Size / Type"}
+					{monster.sizeType || dict.defaultSizeType}
 				</div>
 
 				<div className="linebreak-container linebreak-small">

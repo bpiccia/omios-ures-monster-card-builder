@@ -83,7 +83,7 @@ export function MonsterLibrary({
               : 'bg-transparent border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-400 dark:hover:border-gray-500'
           }`}
         >
-          + New Monster
+          {dict.newMonster}
         </button>
       </div>
     </div>

@@ -66,7 +66,10 @@ export const dictionaries: Record<Language, Dictionary> = {
     duplicatePrompt: "Enter a name for the duplicated monster:",
     emptyLibrary: "No saved monsters yet",
     monsterSaved: "Monster saved!",
-    noName: "Unnamed Monster"
+    noName: "Unnamed Monster",
+    newMonster: "+ New Monster",
+    defaultName: "Monster Name",
+    defaultSizeType: "Size / Type"
   },
   "pt-BR": {
     title: "Criador de Cartas de Monstro",
@@ -111,7 +114,7 @@ export const dictionaries: Record<Language, Dictionary> = {
     deleteMonster: "Excluir",
     duplicateMonster: "Duplicar",
     exportJson: "Exportar JSON",
-    importJson: "Importar JSON",
+    importJson: "Importar Monstro",
     exportAll: "Exportar Todos",
     importAll: "Importar Todos",
     clearAll: "Limpar Tudo",
@@ -120,7 +123,10 @@ export const dictionaries: Record<Language, Dictionary> = {
     duplicatePrompt: "Digite um nome para o monstro duplicado:",
     emptyLibrary: "Nenhum monstro salvo ainda",
     monsterSaved: "Monstro salvo!",
-    noName: "Monstro Sem Nome"
+    noName: "Monstro Sem Nome",
+    newMonster: "+ Novo Monstro",
+    defaultName: "Nome do Monstro",
+    defaultSizeType: "Porte / Tipo"
   }
 } as const;
 

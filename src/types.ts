@@ -94,4 +94,7 @@ export interface Dictionary {
   emptyLibrary: string;
   monsterSaved: string;
   noName: string;
+  newMonster: string;
+  defaultName: string;
+  defaultSizeType: string;
 }

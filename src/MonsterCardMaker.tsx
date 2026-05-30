@@ -417,7 +417,7 @@ export default function MonsterCardMaker({
           {/* Export PNG */}
           <RoundButton
             onClick={exportPng}
-            title="Export PNG"
+            title={dict.exportPng}
             bgFrom="#8B4513"
             bgTo="#A0522D"
             borderColor="#654321"
@@ -427,22 +427,12 @@ export default function MonsterCardMaker({
           {/* Copy PNG */}
           <RoundButton
             onClick={copyPng}
-            title="Copy PNG to clipboard"
+            title={dict.copyPng}
             bgFrom="#556B2F"
             bgTo="#6B8E23"
             borderColor="#3E4B21"
           >
             <img src={getAssetUrl("/clipboard.svg")} alt="Copy" style={{ width: '24px', height: '24px', filter: 'brightness(0) invert(1)' }} />
-          </RoundButton>
-          {/* Reset */}
-          <RoundButton
-            onClick={handleReset}
-            title="Reset form"
-            bgFrom="#B22222"
-            bgTo="#DC143C"
-            borderColor="#8B1A1A"
-          >
-            <img src={getAssetUrl("/reset.svg")} alt="Reset" style={{ width: '24px', height: '24px', filter: 'brightness(0) invert(1)' }} />
           </RoundButton>
         </div>
       </div>
